@@ -14,7 +14,7 @@ Basic workflow
     repo sync; build/envsetup.sh; lunch    # target rom
     ./makeOPDFiles.sh
     ./placeFiles.sh $ROMTYPE               # ROMTYPE could be cm, aokp, etc.
-    ./applyPdroid-4.3.sh
+    ./applyPdroid-4.3.sh                   # customizable for any OpD branch now.
     ./makeOPDFiles.sh
     ./placeFiles.sh
     cd $output file                        # as of initial commit, you have to read output file from screen
