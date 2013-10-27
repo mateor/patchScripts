@@ -1,16 +1,40 @@
 #!/bin/bash
 
-# Apply PDroid from build system Root.
+# The MIT License (MIT)
+#
+# Copyright (c) 2013 Mateor
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
 
-# This LOCK file is used by various scripts to determine if the patches are applied to the source code
-LOCK=~/android/openpdroid/.pdroid-lock
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+
+# Apply PDroid from build system Root.
 
 # Change to whatever works for you
 ANDROID_HOME=~/android/system/jellybean
 PATCHES_LOCATION=~/android/OpenPDroidPatches
+
+# TODO: make BRANCH a parameter
 BRANCH=4.3
 LOG_DIR=~/android/openpdroid
-LOG="$LOG_DIR"/SourcePatch.log
+
+LOG="$LOG_DIR"/OpDPatch.log
+# This LOCK file is used by various scripts to determine if the patches are applied to the source code
+LOCK="$LOG_DIR"/.pdroid-lock
 
 print_error() {
      echo ""
