@@ -1,5 +1,31 @@
+These barely function!
+---------------------------
+
 Collection of scripts I use to manage OpenPDroid source patches and create Autopatcher patches.
 
-Many of these are horrible horrible hacks, and only useful in a file system set up like mine. I believe that manyh of them could be adapted to another person's setup simply by changing the location variables, but that is not true of them all.
+Many of these are horrible horrible hacks, and only useful in a file system set up like mine. I believe that many of them could be adapted to another person's setup simply by changing the location variables, but that is not true of them all.
 
 I mostly am putting them up on Github to preserve them for my own use in case of disaster, and for others to perhaps adapt and maintain if said disaster is severe enough (heaven forbid, I have children!).
+
+
+Basic workflow
+----------------------------------------
+
+    repo sync; build/envsetup.sh; lunch    # target rom
+    ./makeOPDFiles.sh
+    ./placeFiles.sh $ROMTYPE               # ROMTYPE could be cm, aokp, etc.
+    ./applyPdroid-4.3.sh
+    ./makeOPDFiles.sh
+    ./placeFiles.sh
+    cd $output file                        # as of initial commit, you have to read output file from screen
+    ./decompile.sh
+    ./makePatches.sh
+
+* You then have to manually move in whatever patches you need into the autopatcher directory, and undergo further processing with the auto-patcher/ap_scripts (most usefully for others would be ```split_opd.sh``` and ```split_mod.sh```, both of which can accept a file to split as a parameter or defaults to the OpD files.)
+
+
+
+
+This is all more than ugly...I probably will create one script that runs all these steps for you, but I have not found an efficient way to place the patches in the autopatcher after creating them. I could just drop them in whole cloth, but the autopatcher already is of a huge size.
+
+Good luck to anyone who read this far!
