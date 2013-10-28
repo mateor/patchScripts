@@ -17,7 +17,7 @@ Basic workflow (This will change as I finish these up)
     ./placeFiles.sh $ROMTYPE               # Stock jars for making autopatcher patches
     ./applyPdroid.sh $BRANCH               # customizable for any OpD branch now.
     ./makeOPDFiles.sh
-    ./placeFiles.sh
+    ./placeFiles.sh $ROMTYPE
     cd $output file                        # as of initial commit, you have to read output file from screen
     ./decompile.sh
     ./makePatches.sh
