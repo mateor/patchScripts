@@ -74,8 +74,8 @@ TARGET=$PDROID_DIR/$1/$DATE
 
 cp -av $ROM_OUT/framework/services.jar $TARGET/"$PATCHSTATUS"-services
 cp -av $ROM_OUT/framework/framework.jar $TARGET/"$PATCHSTATUS"-framework
-cp -av $ROM_OUT/framework/telephony-common.jar $TARGET/"$PATCHSTATUS"-telephony
-cp -av $ROM_OUT/app/Mms.apk $TARGET/"$PATCHSTATUS"-mms
+cp -av $ROM_OUT/framework/telephony-common.jar $TARGET/"$PATCHSTATUS"-telephony-common
+cp -av $ROM_OUT/app/Mms.apk $TARGET/"$PATCHSTATUS"-Mms
 
 #if [[ "$PATCHSTATUS" == "pdroid" ]]; then
 #    source $PDROID_DIR/decompile.sh || ( echo "something went wrong with the decompile!!!" && exit )
