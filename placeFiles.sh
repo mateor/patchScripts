@@ -24,8 +24,7 @@
 
 # Moves binary files to prep them for the patch construction. Determines if pdroid patches are applied
 # automatically, but needs the ROMTYPE as the sole parameter
-
-# by mateor
+ 
 
 PDROID_DIR=~/android/openpdroid
 
@@ -84,7 +83,7 @@ cp -av $ROM_OUT/app/Mms.apk $TARGET/"$PATCHSTATUS"-mms
 #fi
 
 echo ""
-echo "Successfully placed $PATCHSTATUS files in ~/android/openpdroid/$1/$DATE"
+echo "Successfully placed $PATCHSTATUS files in $PDROID_DIR/$1/$DATE"
 
 #PDROID_OUT="~/android/openpdroid/$1/$DATE"
 #export $PDROID_OUT

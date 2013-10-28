@@ -33,19 +33,20 @@ BRANCH=4.3
 LOG_DIR=~/android/openpdroid
 
 LOG="$LOG_DIR"/OpDPatch.log
+[ -f "$LOG" ] && rm "$LOG"
+
 # This LOCK file is used by various scripts to determine if the patches are applied to the source code
 LOCK="$LOG_DIR"/.pdroid-lock
 
 print_error() {
      echo ""
      echo "!!! error: $@"
+     echo ""
      echo "At least one patch failed to apply! You can see the problem below and in $LOG"
      echo ""
-     grep FAILED "$LOG"
+     grep FAILED "$LOG_DIR"/"$d".log
      echo ""
-     echo "These failures are often just import statements"
-     echo "and are generally easy to resolve manually."
-     echo ""
+     echo "Failures are often just import statements which are easy to resolve manually."
      echo "If there is only one or two, I recommend you take a peek at the .rej file."
      echo ""
 }
@@ -113,7 +114,7 @@ for d in ${DIRECTORIES_TO_PATCH[@]}; do
      cat "$LOG_DIR"/"$d".log >> "$LOG"
      rm "$LOG_DIR"/"$d".log
 done
-
+echo ""
 cd "$ANDROID_HOME"; . build/envsetup.sh
 
 # to determine if Pdroid patches are applied or not
