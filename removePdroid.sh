@@ -22,14 +22,22 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+
+# This remove the OpenPDroidPatches. WARNING! It clobbers local changes indiscriminately!
+#  If you want to keep any local edits, commit them to a NEW BRANCH!
+
 ANDROID_HOME=~/android/system/jellybean
 LOCK_DIR=~/android/openpdroid
 
 # File used to determine is source and created binaries are patched.
 LOCK="$LOCK_DIR"/.pdroid-lock
 
-# TODO add branch as a possible parameter, to clean CM10 and earlier. Default to 4.2+ (as below)
-PATCHED_DIRS=( build libcore frameworks/base frameworks/opt/telephony packages/apps/Mms )
+PATCHED_DIRS=( build libcore frameworks/base packages/apps/Mms frameworks/opt/telephony )
+
+# Remove frameworks/opt/telephony if on an earlier branch
+if [ ! -d $ANDROID_HOME/${PATCHED_DIRS[4]} ]; then
+     PATCHED_DIRS=( ${PATCHED_DIRS[@]//*telephony*} )
+fi
 
 for dir in ${PATCHED_DIRS[@]}; do
      cd "$ANDROID_HOME"/$dir
@@ -41,6 +49,9 @@ done
 
 cd "$ANDROID_HOME"
 repo abandon pdroid
+
+# creating autopatcher branches requires patched/unpatched builds from IDENTICAL source.
+# We repo sync -l because it simply resets the repo, and does not pull any new changes.
 repo sync -l
 
 rm -rf out/target/common/obj/JAVA_LIBRARIES/core_intermediates
