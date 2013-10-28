@@ -22,10 +22,13 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-diff -Npruw stock-services/smali pdroid-services/smali > services.patch
-diff -Npruw stock-framework/smali pdroid-framework/smali > framework.patch
-diff -Npruw stock-telephony/smali pdroid-telephony/smali > telephony-common.patch
-diff -Npruw stock-mms/smali pdroid-mms/smali > Mms.apk.patch
 
-# this needs to be cleaned up so it doesn't produce empty patches. Time to spend the time....
+FILES=( services framework telephony-common Mms )
+
+for f in ${FILES[@]}; do
+     if [ -d pdroid-$f/smali ]; then
+          diff -Npruw stock-$f/smali pdroid-$f/smali > $f.patch
+     fi
+done
+
 
