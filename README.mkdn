@@ -1,20 +1,21 @@
-These barely function!
+Getting better...
 ---------------------------
 
-Collection of scripts I use to manage OpenPDroid source patches and create Autopatcher patches.
+Collection of scripts I use to manage OpenPDroid source patches and create Autopatcher patches. Most of these are only useful to someone making Autopatcher patches. I could see ```applyPdroid.sh``` having broader use, but this is mostly here just for me.
 
-Many of these are horrible horrible hacks, and only useful in a file system set up like mine. I believe that many of them could be adapted to another person's setup simply by changing the location variables, but that is not true of them all.
+These used to be really poor, but I updated them some out of embarassment (should have pushed them to Github much sooner). There is still a bunch to be done, but they are somewhat more portable now.
 
-I mostly am putting them up on Github to preserve them for my own use in case of disaster, and for others to perhaps adapt and maintain if said disaster is severe enough (heaven forbid, I have children!).
+```applyPdroid.sh``` now accepts any OpenPDroidPatches branch as its sole parameter, and reports any failures as well as logs the patching process. You will likely want to change some of the variables (ANDROID_HOME, etc.) to reflect your local environment.
 
 
-Basic workflow
+
+Basic workflow (This will change as I finish these up)
 ----------------------------------------
 
     repo sync; build/envsetup.sh; lunch    # target rom
     ./makeOPDFiles.sh
-    ./placeFiles.sh $ROMTYPE               # ROMTYPE could be cm, aokp, etc.
-    ./applyPdroid-4.3.sh                   # customizable for any OpD branch now.
+    ./placeFiles.sh $ROMTYPE               # Stock jars for making autopatcher patches
+    ./applyPdroid.sh $BRANCH               # customizable for any OpD branch now.
     ./makeOPDFiles.sh
     ./placeFiles.sh
     cd $output file                        # as of initial commit, you have to read output file from screen
@@ -26,6 +27,4 @@ Basic workflow
 
 
 
-This is all more than ugly...I probably will create one script that runs all these steps for you, but I have not found an efficient way to place the patches in the autopatcher after creating them. I could just drop them in whole cloth, but the autopatcher already is of a huge size.
-
-Good luck to anyone who read this far!
+This is all more than ugly...I probably will create one script that runs all these steps but I have not found an efficient way to place the patches in the autopatcher after creating them. I could just drop them in whole cloth, but the autopatcher already is of a huge size.
