@@ -24,9 +24,11 @@
 
 # order OpD build
 
-# Pdroid lock means that the PDroid-patches are applied
+# Edit this section to match your file system
+PDROID_DIR=~/android/openpdroid
 
-LOCK=~/android/openpdroid/.pdroid-lock
+# Pdroid lock means that the PDroid-patches are applied
+LOCK=$PDROID_DIR/.pdroid-lock
 
 # the absence of the PDroid lock means you are ordering a stock build...that usually needs to be clean
 if [ ! -f $LOCK ]; then

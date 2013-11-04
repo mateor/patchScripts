@@ -23,14 +23,18 @@
 # THE SOFTWARE.
 
 
-# This remove the OpenPDroidPatches. WARNING! It clobbers local changes indiscriminately!
+# This removes the OpenPDroidPatches. 
+
+#                           WARNING! It clobbers local changes indiscriminately!!!!!!
+
 #  If you want to keep any local edits, commit them to a NEW BRANCH!
 
+# Edit the below section to match your file system
 ANDROID_HOME=~/android/system/jellybean
-LOCK_DIR=~/android/openpdroid
+PDROID_DIR=~/android/openpdroid
 
 # File used to determine is source and created binaries are patched.
-LOCK="$LOCK_DIR"/.pdroid-lock
+LOCK="$PDROID_DIR"/.pdroid-lock
 
 PATCHED_DIRS=( build libcore frameworks/base packages/apps/Mms frameworks/opt/telephony )
 

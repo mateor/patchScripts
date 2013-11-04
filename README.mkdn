@@ -1,11 +1,18 @@
 
-Collection of scripts I use to manage OpenPDroid source patches and create Autopatcher patches. Unless you are building a ROM with OpenPdroid or looking to experiment with the autopatcher there isn't much of interest here. These scripts _can_ be used to solely manage OpenPDroid patches- if you are simply looking for an easy way to apply source patches, ```applyPdroid.sh``` and ```removePdroid.sh``` might be useful to you.
+Collection of scripts I use to manage OpenPDroid source patches and create Autopatcher patches. Unless you are building a ROM with OpenPdroid or looking to experiment with the autopatcher there isn't much of interest here. 
+
+These scripts _can_ be used to solely manage OpenPDroid patches- if you are simply looking for an easy way to apply source patches, ```applyPdroid.sh``` and ```removePdroid.sh``` might be useful to you.
 
 The scripts assume some file system locations. You can use the defaults or edit in your own. I intend to move these to a config but for now you should look at the first few lines of each script and edit accordingly.
 
      ANDROID_HOME       # this is the root of your Android source tree
      PATCHES_LOCATION   # the location of your git clone https://github.com/OpenPDroid/OpenPDroidPatches
      PDROID_DIR         # working location to put created jars and create autopatcher patches
+
+and for the commands below...
+
+     ROMTYPE            # subjective name, if you only build CyanogenMod, then something like ```cm``` would be fine
+     BRANCH             # Match branch of OpenPDroidPatches. Defaults to 4.3 currently
 
 Basic workflow
 ----------------------------------------
@@ -16,6 +23,7 @@ Basic workflow
     ./applyPdroid.sh $BRANCH               # Accepts a OpenPDroidPatches branch as param or defaults to 4.3
     ./makeOPDFiles.sh
     ./placeFiles.sh $ROMTYPE
+     ./removePdroid.sh                     # optional here, but you'll want it eventually
     cd $output                             # you still have to read output dir from screen
     ./makePatches.sh
 

@@ -27,10 +27,9 @@ LOCK=.pdroid-lock
 
 API=$(cat $PDROID_DIR/$LOCK)
 
-# There should probably be something more extensible here- for what purpose, I don't know.
 # I guess I could just use find, although I don't know if the sanity checks would suffice for me.
 PATCH_STATE=(stock pdroid)
-JARS=(services framework telephony-common Mms.apk)
+JARS=(services core framework core telephony-common Mms.apk)
 
 for STATE in ${PATCH_STATE[@]}; do
      for FILE in ${JARS[@]}; do

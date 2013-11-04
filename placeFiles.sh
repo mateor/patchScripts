@@ -30,7 +30,7 @@ ANDROID_HOME=~/android/system/jellybean
 PDROID_DIR=~/android/openpdroid
 
 # OpenPDroid-specific files. We also use core.jar but those files/patches haven't changed since ICS
-FILES=( framework/telephony-common.jar framework/services.jar framework/framework.jar app/Mms.apk )
+FILES=( framework/telephony-common.jar framework/core.jar framework/services.jar framework/framework.jar app/Mms.apk )
 for F in ${FILES[@]}; do
      JAR=${F##*/}
      JARS+=( $JAR )
