@@ -1,12 +1,7 @@
-Getting better...
----------------------------
 
-Collection of scripts I use to manage OpenPDroid source patches and create Autopatcher patches. Unless you are building a ROM with OpenPdroid or looking to experiment with the autopatcher, there isn't much of interest here. These scripts _can_ be used to solely manage OpenPDroid patches- if you are simply looking for an easy way to apply source patches, ```applyPdroid.sh``` and ```removePdroid.sh``` might be useful to you.
+Collection of scripts I use to manage OpenPDroid source patches and create Autopatcher patches. Unless you are building a ROM with OpenPdroid or looking to experiment with the autopatcher there isn't much of interest here. These scripts _can_ be used to solely manage OpenPDroid patches- if you are simply looking for an easy way to apply source patches, ```applyPdroid.sh``` and ```removePdroid.sh``` might be useful to you.
 
-```applyPdroid.sh``` now accepts any OpenPDroidPatches branch as its sole parameter (defaults to 4.3 currently) and reports any failures while also logging the patching process.
-
-We pass some information through the creation of a ```.pdroid-lock``. The scripts assume some file system locations. You can use the defaults or edit in your own. I intend to move these to a config but for now you should look at the first few lines of each script and edit accordingly.
-
+The scripts assume some file system locations. You can use the defaults or edit in your own. I intend to move these to a config but for now you should look at the first few lines of each script and edit accordingly.
 
      ANDROID_HOME       # this is the root of your Android source tree
      PATCHES_LOCATION   # the location of your git clone https://github.com/OpenPDroid/OpenPDroidPatches
@@ -24,9 +19,4 @@ Basic workflow
     cd $output                             # you still have to read output dir from screen
     ./makePatches.sh
 
-* You then have to manually move in whatever patches you need into the autopatcher directory, and undergo further processing with the auto-patcher/ap_scripts (most usefully for others would be [```split_opd.sh```](https://github.com/mateor/auto-patcher/blob/master/ap_scripts/split_opd.sh) and [```split_mod.sh```](https://github.com/mateor/auto-patcher/blob/master/ap_scripts/split_mod.sh), both of which can accept a file to split as a parameter or defaults to the OpD files. They essentially perform the same function, but ```split_opd.sh``` performs some OpD-specific garbage collection while ```split_mod.sh``` can be used for other things (like __tabletUI__)
-
-
-
-
-This is all more than ugly...I probably will create one script that runs all these steps but I have not found an efficient way to place the patches in the autopatcher after creating them. I could just drop them in whole cloth, but the autopatcher already is of a huge size. I have a plan to rip out all redundent patches and replace with sym/hardlinks. That could be combined to automate this more fully. Decisions, decisions.
+* Creating actual autopatcher patches takes further processing. I refer you to [the processing scripts in the auto_patcher](https://github.com/mateor/auto-patcher/tree/master/ap_scripts), but in the most general sense, you split the patches with ```split_opd.sh`` after they are placed in the autopatcher.
