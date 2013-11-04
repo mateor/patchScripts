@@ -27,16 +27,16 @@
 # Change to whatever works for you
 ANDROID_HOME=~/android/system/jellybean
 PATCHES_LOCATION=~/android/OpenPDroidPatches
+PDROID_DIR=~/android/openpdroid
 
 # TODO: make BRANCH a parameter
 BRANCH=4.3
-LOG_DIR=~/android/openpdroid
 
-LOG="$LOG_DIR"/OpDPatch.log
+LOG="$PDROID_DIR"/OpDPatch.log
 [ -f "$LOG" ] && rm "$LOG"
 
 # This LOCK file is used by various scripts to determine if the patches are applied to the source code
-LOCK="$LOG_DIR"/.pdroid-lock
+LOCK="$PDROID_DIR"/.pdroid-lock
 
 print_error() {
      echo ""
@@ -44,7 +44,7 @@ print_error() {
      echo ""
      echo "At least one patch failed to apply! You can see the problem below and in $LOG"
      echo ""
-     grep FAILED "$LOG_DIR"/"$d".log
+     grep FAILED "$PDROID_DIR"/"$d".log
      echo ""
      echo "Failures are often just import statements which are easy to resolve manually."
      echo "If there is only one or two, I recommend you take a peek at the .rej file."
@@ -89,33 +89,50 @@ git checkout "$BRANCH" || patch_error "Could not checkout the branch you designa
 
 DIRECTORIES_TO_PATCH=( build libcore frameworks_base packages_apps_Mms frameworks_opt_telephony )
 
-cd "$ANDROID_HOME"/build; git checkout -b pdroid; patch -p1 < "$PATCHES_LOCATION"/openpdroid_"$BRANCH"_build.patch >> "$LOG_DIR"/${DIRECTORIES_TO_PATCH[0]}.log 2>&1
-cd "$ANDROID_HOME"/libcore; git checkout -b pdroid; patch -p1 < "$PATCHES_LOCATION"/openpdroid_"$BRANCH"_libcore.patch >> "$LOG_DIR"/${DIRECTORIES_TO_PATCH[1]}.log 2>&1
-cd "$ANDROID_HOME"/frameworks/base; git checkout -b pdroid; patch -p1 < "$PATCHES_LOCATION"/openpdroid_"$BRANCH"_frameworks_base.patch >> "$LOG_DIR"/${DIRECTORIES_TO_PATCH[2]}.log 2>&1
+cd "$ANDROID_HOME"/build; git checkout -b pdroid; patch -p1 < "$PATCHES_LOCATION"/openpdroid_"$BRANCH"_build.patch >> "$PDROID_DIR"/${DIRECTORIES_TO_PATCH[0]}.log 2>&1
+cd "$ANDROID_HOME"/libcore; git checkout -b pdroid; patch -p1 < "$PATCHES_LOCATION"/openpdroid_"$BRANCH"_libcore.patch >> "$PDROID_DIR"/${DIRECTORIES_TO_PATCH[1]}.log 2>&1
+cd "$ANDROID_HOME"/frameworks/base; git checkout -b pdroid; patch -p1 < "$PATCHES_LOCATION"/openpdroid_"$BRANCH"_frameworks_base.patch >> "$PDROID_DIR"/${DIRECTORIES_TO_PATCH[2]}.log 2>&1
 
 # Mms patch introduced in 4.1
 if [ -f $PATCHES_LOCATION/*"$BRANCH"*packages_apps_Mms*h ]; then
-     cd "$ANDROID_HOME"/packages/apps/Mms; git checkout -b pdroid; patch -p1 < "$PATCHES_LOCATION"/openpdroid_"$BRANCH"_packages_apps_Mms.patch >> "$LOG_DIR"/${DIRECTORIES_TO_PATCH[3]}.log 2>&1
+     cd "$ANDROID_HOME"/packages/apps/Mms; git checkout -b pdroid; patch -p1 < "$PATCHES_LOCATION"/openpdroid_"$BRANCH"_packages_apps_Mms.patch >> "$PDROID_DIR"/${DIRECTORIES_TO_PATCH[3]}.log 2>&1
 else
      DIRECTORIES_TO_PATCH=( ${DIRECTORIES_TO_PATCH[@]//packages_apps_Mms} )
 fi
 
 # Telephony-common introduced in 4.2
 if [ -f $PATCHES_LOCATION/*"$BRANCH"*frameworks_opt_telephony*h ]; then
-     cd "$ANDROID_HOME"/frameworks/opt/telephony; git checkout -b pdroid; patch -p1 < "$PATCHES_LOCATION"/openpdroid_"$BRANCH"_frameworks_opt_telephony.patch >> "$LOG_DIR"/${DIRECTORIES_TO_PATCH[4]}.log 2>&1
+     cd "$ANDROID_HOME"/frameworks/opt/telephony; git checkout -b pdroid; patch -p1 < "$PATCHES_LOCATION"/openpdroid_"$BRANCH"_frameworks_opt_telephony.patch >> "$PDROID_DIR"/${DIRECTORIES_TO_PATCH[4]}.log 2>&1
 else
      DIRECTORIES_TO_PATCH=( ${DIRECTORIES_TO_PATCH[@]//frameworks_opt_telephony} )
 fi
 
 echo ""
 for d in ${DIRECTORIES_TO_PATCH[@]}; do
-     ( [[ $(grep FAILED "$LOG_DIR"/"$d".log) != "" ]] && print_error "Failure in $d!" ) || echo "Patched $d succesfully"
-     [[ $(grep "Skip this patch?" "$LOG_DIR"/"$d".log) != "" ]] && print_error "Files not found! Examine ${LOG_DIR}/${LOG} because it is very likely you are using the wrong branch!"
-     cat "$LOG_DIR"/"$d".log >> "$LOG"
-     rm "$LOG_DIR"/"$d".log
+     ( [[ $(grep FAILED "$PDROID_DIR"/"$d".log) != "" ]] && print_error "Failure in $d!" ) || echo "Patched $d succesfully"
+     [[ $(grep "Skip this patch?" "$PDROID_DIR"/"$d".log) != "" ]] && print_error "Files not found! Examine ${PDROID_DIR}/${LOG} because it is very likely you are using the wrong branch!"
+     cat "$PDROID_DIR"/"$d".log >> "$LOG"
+     rm "$PDROID_DIR"/"$d".log
 done
 echo ""
 cd "$ANDROID_HOME"; . build/envsetup.sh
 
-# to determine if Pdroid patches are applied or not
-touch $LOCK
+# use $LOCK to pass API to decompiler
+case $(echo $BRANCH) in
+2.3)
+     API=10
+     ;;
+4.0*)
+     API=15
+     ;;
+4.1)
+     API=16
+     ;;
+4.2)
+     API=17
+     ;;
+4.3)
+     API=18
+     ;;
+esac
+echo -n $API > $LOCK || (patch_error "API level could not be determined!! There was a problem!" && touch "$LOCK" )

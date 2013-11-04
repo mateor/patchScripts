@@ -24,10 +24,19 @@
 
 # Moves binary files to prep them for the patch construction. Determines if pdroid patches are applied
 # automatically, but needs the ROMTYPE as the sole parameter
- 
 
+# Edit the below to suit your environment
+ANDROID_HOME=~/android/system/jellybean
 PDROID_DIR=~/android/openpdroid
 
+# OpenPDroid-specific files. We also use core.jar but those files/patches haven't changed since ICS
+FILES=( framework/telephony-common.jar framework/services.jar framework/framework.jar app/Mms.apk )
+for F in ${FILES[@]}; do
+     JAR=${F##*/}
+     JARS+=( $JAR )
+done
+
+# Perhaps one day to be expanded to take 'files to place' as a second parameter.
 if [[ $# -lt 1 ]]; then
     echo ""
     echo "### Error ###"
@@ -43,10 +52,10 @@ if [[ $# -lt 1 ]]; then
 fi
 
 if [ ! -d $PDROID_DIR/$1 ]; then
-    mkdir ~/android/openpdroid/$1
+    mkdir $PDROID_DIR/$1
 fi
 
-LOCK=~/android/openpdroid/.pdroid-lock
+LOCK=$PDROID_DIR/.pdroid-lock
 
 if [ -f "$LOCK" ]; then
     PATCHSTATUS=pdroid
@@ -59,31 +68,34 @@ if [ ! -d $PDROID_DIR/$1/$DATE ]; then
     mkdir $PDROID_DIR/$1/$DATE || exit
 fi
 
+# replaces makeDirs.sh
 cd $PDROID_DIR/$1/$DATE
-if [ ! -d $PDROID_DIR/$1/$DATE/$PATCHSTATUS-services ]; then
-    bash $PDROID_DIR/makeDirs.sh
+if [ ! -d $PDROID_DIR/$1/$DATE/$PATCHSTATUS-services.jar ]; then
+     for JAR in ${JARS[@]}; do
+          mkdir stock-$JAR
+          mkdir pdroid-$JAR
+     done
 fi
 
-# Find most recently built target
-DEVICEDIR=~/android/system/jellybean/out/target/product
+# Find most recently built target- This is not fool proof, but covers the most likely scenarios
+DEVICEDIR=$ANDROID_HOME/out/target/product
 DEVICES=( $(ls -t $DEVICEDIR) )
 DEVICE=${DEVICES[0]}
 
 ROM_OUT=$DEVICEDIR/$DEVICE/system
 TARGET=$PDROID_DIR/$1/$DATE
 
-cp -av $ROM_OUT/framework/services.jar $TARGET/"$PATCHSTATUS"-services
-cp -av $ROM_OUT/framework/framework.jar $TARGET/"$PATCHSTATUS"-framework
-cp -av $ROM_OUT/framework/telephony-common.jar $TARGET/"$PATCHSTATUS"-telephony-common
-cp -av $ROM_OUT/app/Mms.apk $TARGET/"$PATCHSTATUS"-Mms
-
-#if [[ "$PATCHSTATUS" == "pdroid" ]]; then
-#    source $PDROID_DIR/decompile.sh || ( echo "something went wrong with the decompile!!!" && exit )
- #   source makePatches.sh
-#fi
+# We create a list of files we need to copy and remove a file only when it is successfully placed 
+FAILED_JARS=( ${JARS[@]} )
+for FILE in ${FILES[@]}; do
+     mJAR=${FILE##*/}
+     cp -a $ROM_OUT/$FILE $TARGET/"$PATCHSTATUS"-$mJAR && FAILED_JARS=( ${FAILED_JARS[@]//$mJAR} )
+done
 
 echo ""
-echo "Successfully placed $PATCHSTATUS files in $PDROID_DIR/$1/$DATE"
-
-#PDROID_OUT="~/android/openpdroid/$1/$DATE"
-#export $PDROID_OUT
+if [ ${#FAILED_JARS[@]} == 0 ]; then
+     echo "Successfully placed $PATCHSTATUS files ( ${FILES[@]} ) in $PDROID_DIR/$1/$DATE"
+else
+     echo "ERROR! Was not able to place ${FAILED_JARS[@]}! Check for issue!"
+fi
+echo ""

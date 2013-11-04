@@ -22,13 +22,31 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+PDROID_DIR=~/android/openpdroid
+LOCK=.pdroid-lock
 
-FILES=( services framework telephony-common Mms )
+API=$(cat $PDROID_DIR/$LOCK)
 
-for f in ${FILES[@]}; do
-     if [ -d pdroid-$f/smali ]; then
-          diff -Npruw stock-$f/smali pdroid-$f/smali > $f.patch
-     fi
+# There should probably be something more extensible here- for what purpose, I don't know.
+# I guess I could just use find, although I don't know if the sanity checks would suffice for me.
+PATCH_STATE=(stock pdroid)
+JARS=(services framework telephony-common Mms.apk)
+
+for STATE in ${PATCH_STATE[@]}; do
+     for FILE in ${JARS[@]}; do
+     # echoing API until I have faith in the process. WrongAPI==bootloops
+     echo "... Decompiling $STATE-$FILE with API $API ..."
+     java -jar ~/baksmali.jar -b -a $API $STATE-$FILE*/"$FILE"* -o $STATE-$FILE/smali
+     done
 done
 
-
+for JAR in ${JARS[@]}; do
+     if [ -d pdroid-$JAR*/smali ]; then
+          ( diff -Npruw stock-$JAR*/smali pdroid-$JAR*/smali > $JAR.patch )
+          if [ -s $JAR.patch ]; then
+               echo "### Created: $JAR.patch ###"
+          else
+               echo "!!! Alert! The $JAR.patch was not created or is empty! Check it out. !!!"
+          fi
+     fi
+done
