@@ -1,7 +1,8 @@
+## Patch management hacks
 
-Collection of scripts I use to manage OpenPDroid source patches and create Autopatcher patches. Unless you are building a ROM with OpenPdroid or looking to experiment with the autopatcher there isn't much of interest here. 
+Collection of scripts I use to manage OpenPDroid source patches and create Autopatcher smali patches. Unless you are building a ROM with [OpenPdroid](https://github.com/OpenPDroid) or looking to experiment with the [auto-patcher](https://github.com/mateor/auto-patcher) there isn't much of interest here. 
 
-These scripts _can_ be used to solely manage OpenPDroid patches- if you are simply looking for an easy way to apply source patches, ```applyPdroid.sh``` and ```removePdroid.sh``` might be useful to you.
+These scripts _can_ be used to solely manage OpenPDroid patches. If you are simply looking for a simple way to handle source patches, ```applyPdroid.sh``` and ```removePdroid.sh``` might be useful to you.
 
 The scripts assume some file system locations. You can use the defaults or edit in your own. I intend to move these to a config but for now you should look at the first few lines of each script and edit accordingly.
 
@@ -11,20 +12,32 @@ The scripts assume some file system locations. You can use the defaults or edit 
 
 and for the commands below...
 
-     ROMTYPE            # subjective name, if you only build CyanogenMod, then something like ```cm``` would be fine
+     ROMTYPE            # subjective name, if you build CyanogenMod, then 'cm' would be fine
      BRANCH             # Match branch of OpenPDroidPatches. Defaults to 4.3 currently
+     OUTPUT_DIR         # This will print to screen, but equates to $PDROID_DIR/$ROMTYPE/date
 
-Basic workflow
-----------------------------------------
+### Apply source tree patches and create smali patches
+_Creates a patched/unpatched set of OpenPDroid jars, which we decompile and diff to create smali patches, which are then applied with the auto-patcher_
 
-    repo sync; build/envsetup.sh; lunch    # target rom
-    ./makeOPDFiles.sh                      # orders make of target jars only
-    ./placeFiles.sh $ROMTYPE               # Stock jars for making autopatcher patches
-    ./applyPdroid.sh $BRANCH               # Accepts a OpenPDroidPatches branch as param or defaults to 4.3
-    ./makeOPDFiles.sh
-    ./placeFiles.sh $ROMTYPE
+First, make stock files from unpatched source and move those files to a working directory
+
+     repo sync; build/envsetup.sh; lunch    # target rom
+     ./makeOPDFiles.sh                      # orders make of target jars only
+     ./placeFiles.sh $ROMTYPE               # Stock jars for making autopatcher patches
+
+Then apply the OpenPDroidPatches from __the exact same source__(do NOT repo sync here!) and rebuild
+
+     ./applyPdroid.sh $BRANCH               # Accepts a OpenPDroidPatches branch. Defaults to 4.3
+     ./makeOPDFiles.sh
+     ./placeFiles.sh $ROMTYPE
+
+This changes to the working directory and ordering patches (Below I reset my source tree with ```removePdroid.sh``` first)
+
      ./removePdroid.sh                     # optional here, but you'll want it eventually
-    cd $output                             # you still have to read output dir from screen
-    ./makePatches.sh
+     cd $OUTPUT_DIR                        # you still have to read output dir from screen
+     ./makePatches.sh
 
-* Creating actual autopatcher patches takes further processing. I refer you to [the processing scripts in the auto_patcher](https://github.com/mateor/auto-patcher/tree/master/ap_scripts), but in the most general sense, you split the patches with ```split_opd.sh`` after they are placed in the autopatcher.
+
+### Auto-patcher
+
+Creating actual auto-patcher patches takes further processing. I refer you to [the processing scripts in the auto_patcher](https://github.com/mateor/auto-patcher/tree/master/ap_scripts), but in the most general sense, you split the patches with ```split_opd.sh`` after they are placed in the autopatcher.
