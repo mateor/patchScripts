@@ -24,12 +24,12 @@
 
 # Apply PDroid from build system Root.
 
-# Change to whatever works for you
+# Change this section to whatever works for you
 ANDROID_HOME=~/android/system/jellybean
 PATCHES_LOCATION=~/android/OpenPDroidPatches
 PDROID_DIR=~/android/openpdroid
 
-# TODO: make BRANCH a parameter
+# If you wish to patch earlier Android versions, pass the matching branch of the OpenPDroidPatches as param.
 BRANCH=4.3
 
 LOG="$PDROID_DIR"/OpDPatch.log
@@ -43,7 +43,7 @@ print_error() {
      echo ""
      echo "At least one patch failed to apply! You can see the problem below and in $LOG"
      echo ""
-     grep FAILED "$PDROID_DIR"/"$d".log
+     grep FAILED "$PDROID_DIR"/"$DIR".log
      echo ""
      echo "Failures are often just import statements which are easy to resolve manually."
      echo "If there is only one or two, I recommend you take a peek at the .rej file."
@@ -112,30 +112,30 @@ else
 fi
 
 echo ""
-for d in ${DIRECTORIES_TO_PATCH[@]}; do
-     ( [[ $(grep FAILED "$PDROID_DIR"/"$d".log) != "" ]] && print_error "Failure in $d!" ) || echo "Patched $d succesfully"
-     [[ $(grep "Skip this patch?" "$PDROID_DIR"/"$d".log) != "" ]] && print_error "Files not found! Examine ${PDROID_DIR}/${LOG} because it is very likely you are using the wrong branch!"
-     cat "$PDROID_DIR"/"$d".log >> "$LOG"
-     rm "$PDROID_DIR"/"$d".log
+for DIR in ${DIRECTORIES_TO_PATCH[@]}; do
+     ( [[ $(grep FAILED "$PDROID_DIR"/"$DIR".log) != "" ]] && print_error "Failure in $DIR!" ) || echo "Patched $DIR succesfully"
+     [[ $(grep "Skip this patch?" "$PDROID_DIR"/"$DIR".log) != "" ]] && print_error "Files not found! Examine ${PDROID_DIR}/${LOG} because it is very likely you are using the wrong branch!"
+     cat "$PDROID_DIR"/"$DIR".log >> "$LOG"
+     rm "$PDROID_DIR"/"$DIR".log
 done
 echo ""
 cd "$ANDROID_HOME"; . build/envsetup.sh
 
 # use $LOCK to pass API to decompiler
 case $(echo $BRANCH) in
-2.3)
+2.3*)
      API=10
      ;;
 4.0*)
      API=15
      ;;
-4.1)
+4.1*)
      API=16
      ;;
-4.2)
+4.2*)
      API=17
      ;;
-4.3)
+4.3*)
      API=18
      ;;
 esac

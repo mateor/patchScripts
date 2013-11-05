@@ -19,19 +19,19 @@ and for the commands below...
 ### Apply source tree patches and create smali patches
 _Creates a patched/unpatched set of OpenPDroid jars, which we decompile and diff to create smali patches, which are then applied with the auto-patcher_
 
-First, make stock files from unpatched source and move those files to a working directory
+First, make stock files from unpatched source and move those files to a working directory, like so:
 
      repo sync; build/envsetup.sh; lunch    # target rom
      ./makeOPDFiles.sh                      # orders make of target jars only
      ./placeFiles.sh $ROMTYPE               # Stock jars for making autopatcher patches
 
-Then apply the OpenPDroidPatches from __the exact same source__(do NOT repo sync here!) and rebuild
+Then apply the OpenPDroidPatches to __the exact same source__(do NOT repo sync here!) and rebuild:
 
      ./applyPdroid.sh $BRANCH               # Accepts a OpenPDroidPatches branch. Defaults to 4.3
      ./makeOPDFiles.sh
      ./placeFiles.sh $ROMTYPE
 
-This changes to the working directory and ordering patches (Below I reset my source tree with ```removePdroid.sh``` first)
+Finally, change to the working directory and ordering patches (Below, I elect to reset my source tree with ```removePdroid.sh``` first)
 
      ./removePdroid.sh                     # optional here, but you'll want it eventually
      cd $OUTPUT_DIR                        # you still have to read output dir from screen
@@ -40,4 +40,4 @@ This changes to the working directory and ordering patches (Below I reset my sou
 
 ### Auto-patcher
 
-Creating actual auto-patcher patches takes further processing. I refer you to [the processing scripts in the auto_patcher](https://github.com/mateor/auto-patcher/tree/master/ap_scripts), but in the most general sense, you split the patches with ```split_opd.sh`` after they are placed in the autopatcher.
+Creating actual auto-patcher patches requires further processing of the patches. I refer you to [the processing scripts in the auto_patcher](https://github.com/mateor/auto-patcher/tree/master/ap_scripts), but in the most general sense, you split the patches with ```split_opd.sh`` after they are placed in the autopatcher.
