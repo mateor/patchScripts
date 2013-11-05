@@ -33,7 +33,6 @@ PDROID_DIR=~/android/openpdroid
 BRANCH=4.3
 
 LOG="$PDROID_DIR"/OpDPatch.log
-[ -f "$LOG" ] && rm "$LOG"
 
 # This LOCK file is used by various scripts to determine if the patches are applied to the source code
 LOCK="$PDROID_DIR"/.pdroid-lock
@@ -87,6 +86,11 @@ fi
 cd "$PATCHES_LOCATION"
 git checkout "$BRANCH" || patch_error "Could not checkout the branch you designated, double-check location and branch!"
 
+# We now wipe old logs here
+echo "Patching with OpenPDroidPatches branch: $BRANCH" > "$LOG"
+echo "" >> "$LOG"
+
+# This could be significantly refactored. Lets wait until chen is succesful before we pull the rug, OK?
 DIRECTORIES_TO_PATCH=( build libcore frameworks_base packages_apps_Mms frameworks_opt_telephony )
 
 cd "$ANDROID_HOME"/build; git checkout -b pdroid; patch -p1 < "$PATCHES_LOCATION"/openpdroid_"$BRANCH"_build.patch >> "$PDROID_DIR"/${DIRECTORIES_TO_PATCH[0]}.log 2>&1
@@ -135,4 +139,10 @@ case $(echo $BRANCH) in
      API=18
      ;;
 esac
-echo -n $API > $LOCK || (patch_error "API level could not be determined!! There was a problem!" && touch "$LOCK" )
+
+if [ -n $API ]; then
+     echo -n $API > $LOCK
+else
+     touch "$LOCK"
+     patch_error "API level could not be determined!! There was a problem!"
+fi
