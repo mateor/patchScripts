@@ -7,14 +7,14 @@ These scripts _can_ be used to solely manage OpenPDroid patches. If you are simp
 The scripts assume some file system locations. You can use the defaults or edit in your own. I intend to move these to a config but for now you should look at the first few lines of each script and edit accordingly.
 
      ANDROID_HOME       # this is the root of your Android source tree
-     PATCHES_LOCATION   # the location of your git clone https://github.com/OpenPDroid/OpenPDroidPatches
+     PATCHES_LOCATION   # wherever you git clone https://github.com/OpenPDroid/OpenPDroidPatches
      PDROID_DIR         # working location to put created jars and create autopatcher patches
 
 and for the commands below...
 
-     ROMTYPE            # subjective name, if you build CyanogenMod, then 'cm' would be fine
+     ROMTYPE            # subjective name. If you build CyanogenMod then 'cm' would be fine
      BRANCH             # Match branch of OpenPDroidPatches. Defaults to 4.3 currently
-     OUTPUT_DIR         # This will print to screen, but equates to $PDROID_DIR/$ROMTYPE/date
+     OUTPUT_DIR         # This will print to screen, equal to $PDROID_DIR/$ROMTYPE/date
 
 ### Apply source tree patches and create smali patches
 _Creates a patched/unpatched set of OpenPDroid jars, which we decompile and diff to create smali patches, which are then applied with the auto-patcher_
@@ -25,7 +25,7 @@ First, make stock files from unpatched source and move those files to a working 
      ./makeOPDFiles.sh                      # orders make of target jars only
      ./placeFiles.sh $ROMTYPE               # Stock jars for making autopatcher patches
 
-Then apply the OpenPDroidPatches to __the exact same source__(do NOT repo sync here!) and rebuild:
+Then apply the OpenPDroidPatches to __the exact same source__ (do NOT repo sync here!) and rebuild:
 
      ./applyPdroid.sh $BRANCH               # Accepts a OpenPDroidPatches branch. Defaults to 4.3
      ./makeOPDFiles.sh
@@ -40,4 +40,4 @@ Finally, change to the working directory and ordering patches (Below, I elect to
 
 ### Auto-patcher
 
-Creating actual auto-patcher patches requires further processing of the patches. I refer you to [the processing scripts in the auto_patcher](https://github.com/mateor/auto-patcher/tree/master/ap_scripts), but in the most general sense, you split the patches with ```split_opd.sh`` after they are placed in the autopatcher.
+Creating actual auto-patcher patches requires further processing of the patches. I refer you to [the processing scripts in the auto_patcher](https://github.com/mateor/auto-patcher/tree/master/ap_scripts), but in the most general sense, you split the patches with ``split_opd.sh`` after they are placed in the autopatcher.

@@ -115,6 +115,9 @@ echo ""
 for DIR in ${DIRECTORIES_TO_PATCH[@]}; do
      ( [[ $(grep FAILED "$PDROID_DIR"/"$DIR".log) != "" ]] && print_error "Failure in $DIR!" ) || echo "Patched $DIR succesfully"
      [[ $(grep "Skip this patch?" "$PDROID_DIR"/"$DIR".log) != "" ]] && print_error "Files not found! Examine ${PDROID_DIR}/${LOG} because it is very likely you are using the wrong branch!"
+     echo "" >> "$LOG"
+     echo "Log for $DIR:" >> "$LOG"
+     echo "" >> "$LOG"
      cat "$PDROID_DIR"/"$DIR".log >> "$LOG"
      rm "$PDROID_DIR"/"$DIR".log
 done
