@@ -91,6 +91,8 @@ if [ ! -f "$ROM_OUT/app/Mms.apk" ]; then
      FILES+=( priv-app/Mms.apk )
 fi
 
+#TODO Check for no dex file; or better yet automate lunch.
+
 # We create a list of files we need to copy and remove a file only when it is successfully placed 
 FAILED_JARS=( ${JARS[@]} )
 for FILE in ${FILES[@]}; do
