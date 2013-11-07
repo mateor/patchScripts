@@ -27,6 +27,17 @@ LOCK=.pdroid-lock
 
 API=$(cat $PDROID_DIR/$LOCK)
 
+# default to JB until the custom scene drops 4.4
+if [ -z $API ]; then
+     API=18
+fi
+
+if [[ $# -gt 0 ]]; then
+    API=$1
+    echo ""
+    echo "### Using API $API ###"
+fi
+
 # I guess I could just use find, although I don't know if the sanity checks would suffice for me.
 PATCH_STATE=(stock pdroid)
 JARS=(services core framework core telephony-common Mms.apk)

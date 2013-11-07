@@ -111,6 +111,7 @@ else
      DIRECTORIES_TO_PATCH=( ${DIRECTORIES_TO_PATCH[@]//frameworks_opt_telephony} )
 fi
 
+#TODO Perhaps grep failures & attach it  or create a failures.log. It is useful when resolving patch errors
 echo ""
 for DIR in ${DIRECTORIES_TO_PATCH[@]}; do
      ( [[ $(grep FAILED "$PDROID_DIR"/"$DIR".log) != "" ]] && print_error "Failure in $DIR!" ) || echo "Patched $DIR succesfully"

@@ -85,6 +85,12 @@ DEVICE=${DEVICES[0]}
 ROM_OUT=$DEVICEDIR/$DEVICE/system
 TARGET=$PDROID_DIR/$1/$DATE
 
+# if 4.4 has placed Mms.apk in system/priv-app
+if [ ! -f "$ROM_OUT/app/Mms.apk" ]; then
+     FILES=( ${FILES[@]//*Mms*} )
+     FILES+=( priv-app/Mms.apk )
+fi
+
 # We create a list of files we need to copy and remove a file only when it is successfully placed 
 FAILED_JARS=( ${JARS[@]} )
 for FILE in ${FILES[@]}; do
