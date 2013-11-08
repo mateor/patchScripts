@@ -44,8 +44,9 @@ if [[ $# -gt 0 ]]; then
 fi
 
 if [[ "$API" == "19" ]]; then
-     BAKSMALI_BINARY=~/baksmali-2.0.jar
-     echo "... Using baksmali-2.0.jar for KitKat ..."
+     # Turning off baksmali-2.0 for now...I am getting very ba results on patch application (?)
+     # BAKSMALI_BINARY=~/baksmali-2.0.jar
+     echo "... Using $BAKSMALI_BINARY for KitKat ..."
      echo ""
 fi
 
@@ -69,6 +70,7 @@ for STATE in ${PATCH_STATE[@]}; do
 done
 
 for JAR in ${JARS[@]}; do
+     # TODO handle this better if there's multiple matches to the wildcard: errors. Refactor naming, brah.
      if ( [ -d pdroid-$JAR*/smali ] && [ -d stock-$JAR*/smali ] ); then
           ( diff -Npruw stock-$JAR*/smali pdroid-$JAR*/smali > $JAR.patch )
           if [ -s $JAR.patch ]; then
