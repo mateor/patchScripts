@@ -64,7 +64,7 @@ for STATE in ${PATCH_STATE[@]}; do
      for FILE in ${JARS[@]}; do
           # echoing API until I have faith in the process. WrongAPI==bootloops
           echo "... Decompiling $STATE-$FILE with API "$API" ..."
-          java -jar $BAKSMALI_BINARY -b -a $API $STATE-$FILE*/"$FILE"* -o $STATE-$FILE/smali
+          java -jar $BAKSMALI_BINARY -b -a $API $STATE-$FILE*/"$FILE"* -o $STATE-$FILE*/smali
      done
 done
 
