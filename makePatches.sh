@@ -22,8 +22,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+# Adjust the below section to suit your environment
 PDROID_DIR=~/android/openpdroid
 LOCK=.pdroid-lock
+BAKSMALI_LOC=~
 
 # If making auto-patcher patches for Android KitKat, you will need baksmali-2.0.jar. 
 # It is pointed to SEPARATELY below. Not pretty, I know. I will probably bundle it soon.
@@ -32,9 +34,9 @@ BAKSMALI_BINARY=~/baksmali.jar
 
 API=$(cat $PDROID_DIR/$LOCK)
 
-# default to JB until the custom scene drops 4.4
+# defaulting 4.4
 if [ -z "$API" ]; then
-     API=18
+     API=19
 fi
 
 if [[ $# -gt 0 ]]; then
@@ -45,7 +47,7 @@ fi
 
 if [[ "$API" == "19" ]]; then
      # Turning off baksmali-2.0 for now...I am getting very ba results on patch application (?)
-     # BAKSMALI_BINARY=~/baksmali-2.0.jar
+     BAKSMALI_BINARY=${BAKSMALI_LOC}/baksmali-2.0.jar
      echo "... Using $BAKSMALI_BINARY for KitKat ..."
      echo ""
 fi
@@ -65,7 +67,7 @@ for STATE in ${PATCH_STATE[@]}; do
      for FILE in ${JARS[@]}; do
           # echoing API until I have faith in the process. WrongAPI==bootloops
           echo "... Decompiling $STATE-$FILE with API "$API" ..."
-          java -jar $BAKSMALI_BINARY -b -a $API $STATE-$FILE*/"$FILE"* -o $STATE-$FILE*/smali
+          java -jar $BAKSMALI_BINARY -b -a $API $STATE-$FILE/"$FILE"* -o $STATE-$FILE/smali
      done
 done
 
@@ -79,6 +81,6 @@ for JAR in ${JARS[@]}; do
                echo "!!! Alert! The $JAR.patch was not created or is empty! Check it out. !!!"
           fi
      else
-               echo "!!! Alert! One of the comparison folders is empty! Check the arg to placeFiles.sh!"
+               echo "!!! Alert! One of the $JAR folders is empty! Check the arg to placeFiles.sh!"
      fi
 done

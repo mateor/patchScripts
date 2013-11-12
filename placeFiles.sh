@@ -70,10 +70,15 @@ fi
 
 # replaces makeDirs.sh
 cd $PDROID_DIR/$1/$DATE
-if [ ! -d $PDROID_DIR/$1/$DATE/$PATCHSTATUS-services.jar ]; then
+if [ ! -d $PDROID_DIR/$1/$DATE/$PATCHSTATUS-services ]; then
      for JAR in ${JARS[@]}; do
-          mkdir stock-$JAR
-          mkdir pdroid-$JAR
+          if [[ $JAR == *".jar" ]]; then
+               NAME=${JAR%.jar}
+          else
+               NAME=$JAR
+          fi
+          mkdir stock-$NAME
+          mkdir pdroid-$NAME
      done
 fi
 
@@ -96,8 +101,14 @@ fi
 # We create a list of files we need to copy and remove a file only when it is successfully placed 
 FAILED_JARS=( ${JARS[@]} )
 for FILE in ${FILES[@]}; do
+     # strip path
      mJAR=${FILE##*/}
-     cp -a $ROM_OUT/$FILE $TARGET/"$PATCHSTATUS"-$mJAR && FAILED_JARS=( ${FAILED_JARS[@]//$mJAR} )
+     if [[ $mJAR == *".jar" ]]; then
+          NAME=${mJAR%.jar}
+     else
+          NAME=$mJAR
+     fi
+     cp -a $ROM_OUT/$FILE $TARGET/"$PATCHSTATUS"-$NAME && FAILED_JARS=( ${FAILED_JARS[@]//$mJAR} )
 done
 
 echo ""

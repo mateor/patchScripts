@@ -63,7 +63,7 @@ elif [ $# -gt 1 ]; then
      patch_error "Only the OpenPDroidPatches branch name is accepted as a parameter!"
 fi
 
-AVAILABLE_BRANCHES=( 4.3 4.2.x 4.1.2-aosp 4.1.2-cm 4.1.1-aosp 4.1.1-cm 4.0.4-aosp 4.0.4-cm 2.3 )
+AVAILABLE_BRANCHES=( 4.4 4.3 4.2.x 4.1.2-aosp 4.1.2-cm 4.1.1-aosp 4.1.1-cm 4.0.4-aosp 4.0.4-cm 2.3 )
 VALID_BRANCH=false
 for a in ${AVAILABLE_BRANCHES[@]}; do
      if [[ "$a" == $BRANCH ]]; then

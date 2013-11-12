@@ -9,29 +9,32 @@ The scripts assume some file system locations. You can use the defaults or edit 
      ANDROID_HOME       # this is the root of your Android source tree
      PATCHES_LOCATION   # wherever you git clone https://github.com/OpenPDroid/OpenPDroidPatches
      PDROID_DIR         # working location to put created jars and create autopatcher patches
+     BAKSMALI_LOC       # location of the smali/baksmali binaries if not in your path*
+
+* if creating patches for Android4.4 KitKat, you will need [baksmali-2.0 or greater](https://github.com/JesusFreke/smali).
 
 and for the commands below...
 
      ROMTYPE            # subjective name. If you build CyanogenMod then 'cm' would be fine
-     BRANCH             # Match branch of OpenPDroidPatches. Defaults to 4.3 currently
+     BRANCH             # Match branch of OpenPDroidPatches. Defaults to 4.4 currently
      OUTPUT_DIR         # This will print to screen, equal to $PDROID_DIR/$ROMTYPE/date
 
 ### Apply source tree patches and create smali patches
 _Creates a patched/unpatched set of OpenPDroid jars, which we decompile and diff to create smali patches, which are then applied with the auto-patcher_
 
-First, make stock files from unpatched source and move those files to a working directory, like so:
+1) First, make stock files from unpatched source and move those files to a working directory, like so:
 
      repo sync; build/envsetup.sh; lunch    # target rom
      ./makeOPDFiles.sh                      # orders make of target jars only
      ./placeFiles.sh $ROMTYPE               # Stock jars for making autopatcher patches
 
-Then apply the OpenPDroidPatches to __the exact same source__ (do NOT repo sync here!) and rebuild:
+2) Then apply the OpenPDroidPatches to __the exact same source__ (do NOT repo sync here!) and rebuild:
 
      ./applyPdroid.sh $BRANCH               # Accepts a OpenPDroidPatches branch. Defaults to 4.3
      ./makeOPDFiles.sh
      ./placeFiles.sh $ROMTYPE
 
-Finally, change to the working directory and ordering patches (Below, I elect to reset my source tree with ```removePdroid.sh``` first)
+3) Finally, change to the working directory and ordering patches (Below, I elect to reset my source tree with ```removePdroid.sh``` first)
 
      ./removePdroid.sh                     # optional here, but you'll want it eventually
      cd $OUTPUT_DIR                        # you still have to read output dir from screen
