@@ -65,4 +65,4 @@ rm -rf out/target/common/obj/JAVA_LIBRARIES/telephony-common_intermediates
 rm -rf out/target/common/obj/APPS/Mms_intermediates
 
 # remove the lock and allow for future patching
-rm -rf $LOCK && echo "Pdroid Lock removed."
+rm $LOCK && echo "Pdroid Lock removed."
