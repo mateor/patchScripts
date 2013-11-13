@@ -37,6 +37,7 @@ API=$(cat $PDROID_DIR/$LOCK)
 # defaulting 4.4
 if [ -z "$API" ]; then
      API=19
+     echo "Defaulting to API 19. You can pass an API as the sole argument to the script"
 fi
 
 if [[ $# -gt 0 ]]; then
