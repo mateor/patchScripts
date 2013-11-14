@@ -30,7 +30,7 @@ PATCHES_LOCATION=~/android/OpenPDroidPatches
 PDROID_DIR=~/android/openpdroid
 
 # If you wish to patch earlier Android versions, pass the matching branch of the OpenPDroidPatches as param.
-BRANCH=4.3
+BRANCH=4.4
 
 LOG="$PDROID_DIR"/OpDPatch.log
 
