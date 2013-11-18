@@ -23,6 +23,7 @@
 # THE SOFTWARE.
 
 # Adjust the below section to suit your environment
+AUTOPATCHER_DIR=~/android/auto-patcher
 PDROID_DIR=~/android/openpdroid
 LOCK=.pdroid-lock
 BAKSMALI_LOC=~
@@ -47,7 +48,6 @@ if [[ $# -gt 0 ]]; then
 fi
 
 if [[ "$API" == "19" ]]; then
-     # Turning off baksmali-2.0 for now...I am getting very ba results on patch application (?)
      BAKSMALI_BINARY=${BAKSMALI_LOC}/baksmali-2.0.jar
      echo "... Using $BAKSMALI_BINARY for KitKat ..."
      echo ""
@@ -56,7 +56,7 @@ fi
 if [ ! -f "$BAKSMALI_BINARY" ]; then
      echo "Cannot find the $BAKSMALI_BINARY! Edit the location in the script!"
      echo ""
-     echo "Android 4.4 requires baksmali-2.0.jar, earlier Android versions use baskmali-1.4*.jar"
+     echo "Android 4.4 requires baksmali-2.0.jar. Earlier Android versions use baskmali-1.4*.jar"
      exit
 fi
 
@@ -85,3 +85,8 @@ for JAR in ${JARS[@]}; do
                echo "!!! Alert! One of the $JAR folders is empty! Check the arg to placeFiles.sh!"
      fi
 done
+
+
+# Load Auto-patcher
+# TODO. I think it might fit better in here as the variables wouldn't need to port. Fitting these together 
+#    is a work in progress
