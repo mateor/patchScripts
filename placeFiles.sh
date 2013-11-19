@@ -93,7 +93,9 @@ TARGET=$PDROID_DIR/$1/$DATE
 # if 4.4 has placed Mms.apk in system/priv-app
 if [ ! -f "$ROM_OUT/app/Mms.apk" ]; then
      FILES=( ${FILES[@]//*Mms*} )
-     FILES+=( priv-app/Mms.apk )
+     if [ ! -f "$ROM_OUT/priv-app/Mms.apk" ]; then
+          FILES+=( priv-app/Mms.apk )
+     fi
 fi
 
 #TODO Check for no dex file; or better yet automate lunch.
