@@ -25,9 +25,10 @@
 # order builds for SlimRom, CyanogenMod, AOKP, AOSP, PAC-man, OmniRom, ParanoidAndroid and whomever else.
 
 # adjust these to your own environment/preferences
+set -a
 ANDROID_HOME=~/android/system/jellybean
-# PDROID_LOC generally will be where you git clone patchScripts
-PDROID_LOC=~/android/openpdroid
+# PDROID_DIR generally will be where you git clone patchScripts
+PDROID_DIR=~/android/openpdroid
 TARGET=mako
 
 # adjust as per your machine- 8 might be a good start.
@@ -35,9 +36,14 @@ JOBS=24
 
 TARGET_VERSION=4.4
 LUNCH_COMMAND="lunch ${1}_${TARGET}-userdebug"
+# this is for using github.com address as argument. For full builds, change this to "brunch $TARGET"
+DEFAULT_LUNCH_COMMAND="lunch aosp_$TARGET-userdebug"
 
 # If you want the whole rom, change this to something else ("make otapackage" or "brunch $TARGET" maybe).
-BUILD_COMMAND=$PDROID_LOC/makeOPDFiles.sh
+BUILD_COMMAND=$PDROID_DIR/makeOPDFiles.sh
+
+
+JAR_OUT="$1"-"$TARGET_VERSION"
 
 print_error() {
      echo ""
@@ -188,10 +194,11 @@ case "$1" in
           esac
      ;;
      http*)
-          GITHUB="$1"
-          TARGET_BRANCH="$TARGE_VERSION"
-          # This is just for a start b/c it will be trouble when swicthing between romtypes. Use unset?
-          LUNCH_COMMAND=brunch $TARGET
+          GITHUB_ADDRESS="$1"
+          GITHUB=${GITHUB_ADDRESS//*.com\//}
+          TARGET_BRANCH="$TARGET_VERSION"
+          # This works for me but will not provide full builds. parsing lunch menu may be only current hope
+          $DEFAULT_LUNCH_COMMAND
      ;;
      *)
      print_error "Not a valid rom target."
@@ -200,11 +207,18 @@ esac
 
 
 # order builds
-cd "$ANDROID_HOME"
+cd $ANDROID_HOME
 rm -rf .repo/manifests manifests.xml
 rm -rf .repo/local_manifests local_manifests.xml
 repo init -u https://github.com/${GITHUB} -b $TARGET_BRANCH
 repo sync -j${JOBS} -f
 . build/envsetup.sh
 $LUNCH_COMMAND
+
+# I may have to just check that the above went without error manually. I could capture stderr...hmmmph.
 $BUILD_COMMAND
+
+# move to working directory
+#$PDROID_DIR/placeFiles.sh "$ROM_OUT"
+
+# OpD
