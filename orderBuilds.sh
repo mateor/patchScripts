@@ -197,8 +197,8 @@ case "$1" in
           GITHUB_ADDRESS="$1"
           GITHUB=${GITHUB_ADDRESS//*.com\//}
           TARGET_BRANCH="$TARGET_VERSION"
-          # This works for me but will not provide full builds. parsing lunch menu may be only current hope
-          $DEFAULT_LUNCH_COMMAND
+          # The below works for us but won't provide full build. parsing lunch menu may be only current hope
+          LUNCH_COMMAND="$DEFAULT_LUNCH_COMMAND"
      ;;
      *)
      print_error "Not a valid rom target."
@@ -208,6 +208,8 @@ esac
 
 # order builds
 cd $ANDROID_HOME
+
+# get of legitimate as well as hacky manifests from old builds.
 rm -rf .repo/manifests manifests.xml
 rm -rf .repo/local_manifests local_manifests.xml
 repo init -u https://github.com/${GITHUB} -b $TARGET_BRANCH
