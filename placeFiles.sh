@@ -25,9 +25,9 @@
 # Moves binary files to prep them for the patch construction. Determines if pdroid patches are applied
 # automatically, but needs the ROMTYPE as the sole parameter
 
-# Edit the below to suit your environment
-ANDROID_HOME=~/android/system/jellybean
-PDROID_DIR=~/android/openpdroid
+# Edit the below to suit your environment (not set if called from orderBuilds)
+[[ "$ANDROID_HOME" == "" ]] && ANDROID_HOME=~/android/system/jellybean
+[[ "$PDROID_DIR" == "" ]] && PDROID_DIR=~/android/openpdroid
 
 # OpenPDroid-specific files. We also use core.jar but those files/patches haven't changed since ICS
 FILES=( framework/telephony-common.jar framework/core.jar framework/services.jar framework/framework.jar app/Mms.apk )
@@ -87,15 +87,17 @@ DEVICEDIR=$ANDROID_HOME/out/target/product
 DEVICES=( $(ls -t $DEVICEDIR) )
 DEVICE=${DEVICES[0]}
 
+#TODO if $DEVICE=generic, etc. (no dex in generic builds)
+
 ROM_OUT=$DEVICEDIR/$DEVICE/system
-TARGET=$PDROID_DIR/$1/$DATE
+
+# Checking if being run alone or in the orderBuilds sequence
+[[ "$JAR_OUT" == "" ]] && JAR_OUT=$PDROID_DIR/$1/$DATE
 
 # if 4.4 has placed Mms.apk in system/priv-app
 if [ ! -f "$ROM_OUT/app/Mms.apk" ]; then
      FILES=( ${FILES[@]//*Mms*} )
-     if [ ! -f "$ROM_OUT/priv-app/Mms.apk" ]; then
-          FILES+=( priv-app/Mms.apk )
-     fi
+     FILES+=( priv-app/Mms.apk )
 fi
 
 #TODO Check for no dex file; or better yet automate lunch.
@@ -110,12 +112,12 @@ for FILE in ${FILES[@]}; do
      else
           NAME=$mJAR
      fi
-     cp -a $ROM_OUT/$FILE $TARGET/"$PATCHSTATUS"-$NAME && FAILED_JARS=( ${FAILED_JARS[@]//$mJAR} )
+     cp -a $ROM_OUT/$FILE "$JAR_OUT"/"$PATCHSTATUS"-$NAME && FAILED_JARS=( ${FAILED_JARS[@]//$mJAR} )
 done
 
 echo ""
 if [ ${#FAILED_JARS[@]} == 0 ]; then
-     echo "Successfully placed $PATCHSTATUS files ( ${FILES[@]} ) in $PDROID_DIR/$1/$DATE"
+     echo "Successfully placed $PATCHSTATUS files ( ${FILES[@]} ) in $JAR_OUT"
 else
      echo "ERROR! Was not able to place ${FAILED_JARS[@]}! Check for issue!"
 fi
