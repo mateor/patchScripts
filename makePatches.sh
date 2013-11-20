@@ -78,6 +78,7 @@ for JAR in ${JARS[@]}; do
           ( diff -Npruw stock-$JAR*/smali pdroid-$JAR*/smali > $JAR.patch )
           if [ -s $JAR.patch ]; then
                echo "### Created: $JAR.patch ###"
+               JARS=( ${JARS[@]//$JAR} )
           else
                echo "!!! Alert! The $JAR.patch was not created or is empty! Check it out. !!!"
           fi
@@ -86,6 +87,11 @@ for JAR in ${JARS[@]}; do
      fi
 done
 
+# reset source (I always forget to do this elsewhere. Maybe this will not be smart.)
+if [[ ${#JARS[@]} -eq 0 ]]; then
+     echo ""
+     "$PDROID_DIR"/removePdroid.sh && echo "All patches created successfully, patches removed from source"
+fi
 
 # Load Auto-patcher
 # TODO. I think it might fit better in here as the variables wouldn't need to port. Fitting these together 

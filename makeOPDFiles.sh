@@ -25,7 +25,7 @@
 # order OpD build
 
 # Edit this section to match your file system
-PDROID_DIR=~/android/openpdroid
+[[ "$PDROID_DIR" == "" ]] && PDROID_DIR=~/android/openpdroid
 
 # Pdroid lock means that the PDroid-patches are applied
 LOCK=$PDROID_DIR/.pdroid-lock
