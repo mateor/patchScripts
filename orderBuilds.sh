@@ -24,12 +24,15 @@
 
 # order builds for SlimRom, CyanogenMod, AOKP, AOSP, PAC-man, OmniRom, ParanoidAndroid and whomever else.
 
-# adjust these to your own environment/preferences
 set -a
-ANDROID_HOME=~/android/system/jellybean
+
+# adjust these to your own environment/preferences
+
 # PDROID_DIR generally will be where you git clone patchScripts
 PDROID_DIR=~/android/openpdroid
+ANDROID_HOME=~/android/system/jellybean
 TARGET=mako
+MANUFACTURER=lge                    # not often needed, only AOKP right now.
 
 # adjust as per your machine- 8 might be a good start.
 JOBS=24
@@ -38,6 +41,8 @@ TARGET_VERSION=4.4
 LUNCH_COMMAND="lunch ${1}_${TARGET}-userdebug"
 # this is for using github.com address as argument. For full builds, change this to "brunch $TARGET"
 DEFAULT_LUNCH_COMMAND="lunch aosp_$TARGET-userdebug"
+# Needed to allow for AOKP, and anyone else who gets cute. WE NEED SANITY HERE, lol!
+REPO_SYNC_COMMAND=repo init -u https://github.com/${GITHUB} -b $TARGET_BRANCH
 
 # If you want the whole rom, change this to something else ("make otapackage" or "brunch $TARGET" maybe).
 BUILD_COMMAND=$PDROID_DIR/makeOPDFiles.sh
@@ -133,6 +138,8 @@ case "$1" in
                TARGET_BRANCH=kitkat
                ;;
           esac
+          REPO_SYNC_COMMAND="repo init -u https://github.com/$GITHUB -b $TARGET_BRANCH -g all,-notdefault,$TARGET,$MANUFACTURER"
+
      ;;
      slim)
           GITHUB=SlimRoms/platform_manifest
@@ -148,6 +155,23 @@ case "$1" in
                ;;
                4.4)
                TARGET_BRANCH=kk4.4
+               ;;
+          esac
+     ;;
+     vanir)
+          GITHUB=VanirAOSP/platform_manifest
+          case "$TARGET_VERSION" in
+               4.1)
+               TARGET_BRANCH=jb
+               ;;
+               4.2)
+               TARGET_BRANCH=jb42
+               ;;
+               4.3)
+               TARGET_BRANCH=jb43
+               ;;
+               4.4)
+               TARGET_BRANCH=kk44
                ;;
           esac
      ;;
@@ -212,7 +236,7 @@ cd $ANDROID_HOME
 # get of legitimate as well as hacky manifests from old builds.
 rm -rf .repo/manifests manifests.xml
 rm -rf .repo/local_manifests local_manifests.xml
-repo init -u https://github.com/${GITHUB} -b $TARGET_BRANCH
+"$REPO_SYNC_COMMAND"
 repo sync -j${JOBS} -f
 . build/envsetup.sh
 $LUNCH_COMMAND
