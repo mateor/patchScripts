@@ -51,9 +51,11 @@ print_error() {
 }
 
 patch_error() {
+     echo ""
      echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
      echo "!!! error: $@"
      echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+     echo ""
      exit
 }
 
@@ -142,9 +144,12 @@ case $(echo $BRANCH) in
 4.3*)
      API=18
      ;;
+4.4*)
+     API=19
+     ;;
 esac
 
-if [ -n $API ]; then
+if [ -n "$API" ]; then
      echo -n $API > $LOCK
 else
      touch "$LOCK"

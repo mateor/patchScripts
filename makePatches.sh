@@ -35,9 +35,11 @@ BAKSMALI_BINARY=~/baksmali.jar
 
 API=$(cat $PDROID_DIR/$LOCK)
 
+# something isn't working...check this out.
 # defaulting 4.4
 if [ -z "$API" ]; then
      API=19
+     echo ""
      echo "Defaulting to API 19. You can pass an API as the sole argument to the script"
 fi
 
