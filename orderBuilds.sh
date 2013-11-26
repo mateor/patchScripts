@@ -42,7 +42,7 @@ LUNCH_COMMAND="lunch ${1}_${TARGET}-userdebug"
 # this is for using github.com address as argument. For full builds, change this to "brunch $TARGET"
 DEFAULT_LUNCH_COMMAND="lunch aosp_$TARGET-userdebug"
 # Needed to allow for AOKP, and anyone else who gets cute. WE NEED SANITY HERE, lol!
-REPO_SYNC_COMMAND=repo init -u https://github.com/${GITHUB} -b $TARGET_BRANCH
+
 
 # If you want the whole rom, change this to something else ("make otapackage" or "brunch $TARGET" maybe).
 BUILD_COMMAND=$PDROID_DIR/makeOPDFiles.sh
@@ -138,8 +138,6 @@ case "$1" in
                TARGET_BRANCH=kitkat
                ;;
           esac
-          REPO_SYNC_COMMAND="repo init -u https://github.com/$GITHUB -b $TARGET_BRANCH -g all,-notdefault,$TARGET,$MANUFACTURER"
-
      ;;
      slim)
           GITHUB=SlimRoms/platform_manifest
@@ -229,6 +227,11 @@ case "$1" in
      ;;
 esac
 
+if [[ "$1" == aokp ]]; then
+     REPO_SYNC_COMMAND="repo init -u https://github.com/$GITHUB -b $TARGET_BRANCH -g all,-notdefault,$TARGET,$MANUFACTURER"
+else
+     REPO_SYNC_COMMAND="repo init -u https://github.com/${GITHUB} -b $TARGET_BRANCH"
+fi
 
 # order builds
 cd $ANDROID_HOME
@@ -236,7 +239,7 @@ cd $ANDROID_HOME
 # get of legitimate as well as hacky manifests from old builds.
 rm -rf .repo/manifests manifests.xml
 rm -rf .repo/local_manifests local_manifests.xml
-"$REPO_SYNC_COMMAND"
+$REPO_SYNC_COMMAND
 repo sync -j${JOBS} -f
 . build/envsetup.sh
 $LUNCH_COMMAND
