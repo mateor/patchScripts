@@ -100,7 +100,7 @@ if [[ ${#JARS[@]} -eq 0 ]]; then
      echo ""
      echo "All patches created successfully"
      if [[ "$REMOVE_SOURCE" != "false" ]]; then
-          "$PDROID_DIR"/removePdroid.sh && echo"OpenPDroid patches have been removed from source"
+          "$PDROID_DIR"/removePdroid.sh && echo "OpenPDroid patches have been removed from source"
      fi
 fi
 
