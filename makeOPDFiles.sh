@@ -27,6 +27,8 @@
 # Edit this section to match your file system
 [[ "$PDROID_DIR" == "" ]] && PDROID_DIR=~/android/openpdroid
 
+#TODO add a ANDROID_HOME env variable
+
 # Pdroid lock means that the PDroid-patches are applied
 LOCK=$PDROID_DIR/.pdroid-lock
 

@@ -24,16 +24,20 @@
 
 # Adjust the below section to suit your environment
 AUTOPATCHER_DIR=~/android/auto-patcher
-PDROID_DIR=~/android/openpdroid
+PDROID_DIR=~/android/openpdroid                       # just your working, or "out", directory.
+PATCH_SCRIPTS_LOC=~/android/openpdroid/patchScripts
 LOCK=.pdroid-lock
-BAKSMALI_LOC=~
 
-# If making auto-patcher patches for Android KitKat, you will need baksmali-2.0.jar. 
-# It is pointed to SEPARATELY below. Not pretty, I know. I will probably bundle it soon.
+# If making auto-patcher patches for Android KitKat, you will need baksmali-2.0.jar. Now bundled.
+BAKSMALI_LOC="$PATCH_SCRIPTS_LOC/bin"
 BAKSMALI_BINARY=~/baksmali.jar
 
 
-API=$(cat $PDROID_DIR/$LOCK)
+if [ -f "$PDROID_DIR"/"$LOCK" ]; then
+     API=$(cat $PDROID_DIR/$LOCK)
+else
+     REMOVE_SOURCE=false
+fi
 
 # something isn't working...check this out.
 # defaulting 4.4
@@ -41,6 +45,7 @@ if [ -z "$API" ]; then
      API=19
      echo ""
      echo "Defaulting to API 19. You can pass an API as the sole argument to the script"
+     echo ""
 fi
 
 if [[ $# -gt 0 ]]; then
@@ -58,7 +63,8 @@ fi
 if [ ! -f "$BAKSMALI_BINARY" ]; then
      echo "Cannot find the $BAKSMALI_BINARY! Edit the location in the script!"
      echo ""
-     echo "Android 4.4 requires baksmali-2.0.jar. Earlier Android versions use baskmali-1.4*.jar"
+     echo "Android 4.4 requires baksmali-2.0.jar."
+     echo " while earlier Android versions use baskmali-1.4*.jar"
      exit
 fi
 
@@ -92,7 +98,10 @@ done
 # reset source (I always forget to do this elsewhere. Maybe this will not be smart.)
 if [[ ${#JARS[@]} -eq 0 ]]; then
      echo ""
-     "$PDROID_DIR"/removePdroid.sh && echo "All patches created successfully, patches removed from source"
+     echo "All patches created successfully"
+     if [[ "$REMOVE_SOURCE" != "false" ]]; then
+          "$PDROID_DIR"/removePdroid.sh && echo"OpenPDroid patches have been removed from source"
+     fi
 fi
 
 # Load Auto-patcher

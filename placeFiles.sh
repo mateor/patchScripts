@@ -119,6 +119,6 @@ echo ""
 if [ ${#FAILED_JARS[@]} == 0 ]; then
      echo "Successfully placed $PATCHSTATUS files ( ${FILES[@]} ) in $JAR_OUT"
 else
-     echo "ERROR! Was not able to place ${FAILED_JARS[@]}! Check for issue!"
+     echo "ERROR! Was not able to place ( ${FAILED_JARS[@]} ) in $JAR_OUT"
 fi
 echo ""

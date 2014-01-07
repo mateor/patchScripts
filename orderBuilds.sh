@@ -33,15 +33,16 @@ PDROID_DIR=~/android/openpdroid
 ANDROID_HOME=~/android/system/jellybean
 TARGET=mako
 MANUFACTURER=lge                    # not often needed, only AOKP right now.
+TARGET_VERSION=4.4
 
 # adjust as per your machine- 8 might be a good start.
 JOBS=24
 
-TARGET_VERSION=4.4
-LUNCH_COMMAND="lunch ${1}_${TARGET}-userdebug"
 # this is for using github.com address as argument. For full builds, change this to "brunch $TARGET"
+LUNCH_COMMAND="lunch ${1}_${TARGET}-userdebug"
+
+# Needed to allow for AOKP, and anyone else who gets cute.
 DEFAULT_LUNCH_COMMAND="lunch aosp_$TARGET-userdebug"
-# Needed to allow for AOKP, and anyone else who gets cute. WE NEED SANITY HERE, lol!
 
 
 # If you want the whole rom, change this to something else ("make otapackage" or "brunch $TARGET" maybe).
@@ -243,6 +244,8 @@ $REPO_SYNC_COMMAND
 repo sync -j${JOBS} -f
 . build/envsetup.sh
 $LUNCH_COMMAND
+# for roomservice and local_manifest pickups
+$REPO_SYNC_COMMAND
 
 # I may have to just check that the above went without error manually. I could capture stderr...hmmmph.
 $BUILD_COMMAND
