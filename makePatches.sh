@@ -39,19 +39,26 @@ else
      REMOVE_SOURCE=false
 fi
 
-# something isn't working...check this out.
-# defaulting 4.4
-if [ -z "$API" ]; then
-     API=19
-     echo ""
-     echo "Defaulting to API 19. You can pass an API as the sole argument to the script"
-     echo ""
-fi
+# The API is sent to the decompiler as an argument. Android 4.4 MUST be used with API 19 and is the default.
+# The other Android versions are a little more flexible, but best to be precise
+# Android 2.3 is API=10
+# 4.0 is API=15
+# 4.1* is API=16
+# 4.2* is API=17
+# 4.3* is API=18
 
 if [[ $# -gt 0 ]]; then
     API=$1
     echo ""
     echo "### Using API $API ###"
+fi
+
+if [ -z "$API" ]; then
+     API=19
+     echo ""
+     echo "Defaulting to API 19. You can pass an API as the sole argument to the script"
+     echo "See in-script comment for further information"
+     echo ""
 fi
 
 if [[ "$API" == "19" ]]; then
