@@ -24,7 +24,7 @@
 
 # order OpD build
 
-# Edit this section to match your file system
+# If you want to adjust this value, do it in the BUILD file.
 [[ "$PDROID_DIR" == "" ]] && PDROID_DIR=~/android/openpdroid
 
 # Pdroid lock means that the PDroid-patches are applied
@@ -35,4 +35,5 @@ if [ ! -f $LOCK ]; then
      make clobber
 fi
 
+java -version > "$PATCH_SCRIPT_LOC"/DEBUG.log
 make framework services core telephony-common Mms

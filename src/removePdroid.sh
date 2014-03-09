@@ -54,7 +54,7 @@ done
 cd "$ANDROID_HOME"
 repo abandon pdroid
 
-# creating autopatcher branches requires patched/unpatched builds from IDENTICAL source.
+# creating autopatcher patches requires patched/unpatched builds from IDENTICAL source.
 # We repo sync -l because it simply resets the repo, and does not pull any new changes.
 repo sync -l
 

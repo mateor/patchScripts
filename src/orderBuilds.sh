@@ -228,9 +228,9 @@ case "$1" in
 esac
 
 if [[ "$1" == aokp ]]; then
-     REPO_SYNC_COMMAND="repo init -u https://github.com/$GITHUB -b $TARGET_BRANCH -g all,-notdefault,$TARGET,$MANUFACTURER"
+     REPO_INIT_COMMAND="repo init -u https://github.com/$GITHUB -b $TARGET_BRANCH -g all,-notdefault,$TARGET,$MANUFACTURER"
 else
-     REPO_SYNC_COMMAND="repo init -u https://github.com/${GITHUB} -b $TARGET_BRANCH"
+     REPO_INIT_COMMAND="repo init -u https://github.com/${GITHUB} -b $TARGET_BRANCH"
 fi
 
 # order builds
@@ -242,16 +242,16 @@ if [[ ! -f $LOCK ]]; then
      current=$(cat $IPC)
      current_rom=${current%-*}
      # remove old manifests and repo init if switching rom types
-     if ( "$1" != current ); then
+     if [[ "$1" != current  ]]; then
           rm -rf .repo/manifests manifests.xml
           rm -rf .repo/local_manifests local_manifests.xml
-          $REPO_SYNC_COMMAND
+          $REPO_INIT_COMMAND
           repo sync -j${JOBS} -f
      fi
      . build/envsetup.sh
      $LUNCH_COMMAND
      # for roomservice and local_manifest pickups
-     $REPO_SYNC_COMMAND
+     $REPO_INIT_COMMAND
 else
      . build/envsetup.sh
      $LUNCH_COMMAND
