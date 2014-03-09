@@ -54,7 +54,7 @@ MANUFACTURER=lge
 PATCH_SCRIPTS_LOC=$(pwd)
 
 LOCK="$PDROID_DIR"/.pdroid-lock
-IPC=.iproc
+IPC=$PATCH_SCRIPTS_LOC/.iproc
 
 bold=`tput bold`
 normal=`tput sgr0`

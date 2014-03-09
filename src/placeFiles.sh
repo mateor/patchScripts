@@ -122,4 +122,4 @@ else
      echo "ERROR! Was not able to place ( ${FAILED_JARS[@]} ) in $JAR_OUT"
 fi
 echo ""
-echo $JAR_OUT > $PATCH_SCRIPTS_LOC/$IPC
+echo $JAR_OUT > $IPC

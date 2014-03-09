@@ -28,11 +28,13 @@
 
 # PLEASE edit values in BUILD file or WOE BETIDE YOU!
 
-
 # pass environmental variables to children
 set -a
 source BUILD
-source $IPC
+
+#debug
+source .iproc
+
 
 usage () {
      echo ""
@@ -92,7 +94,7 @@ case "$1" in
      source $PATCH_SCRIPTS_LOC/src/orderBuilds.sh "$2" "$3" && (source $PATCH_SCRIPTS_LOC/src/makeOPDFiles.sh && source $PATCH_SCRIPTS_LOC/src/placeFiles.sh "$2")
      ;;
 [Mm]akePatches)
-     OUT=$(cat .config)
+     OUT=$(cat $IPC)
      cd $OUT
      source $PATCH_SCRIPTS_LOC/src/makePatches.sh
      echo "Created patches at $OUT"

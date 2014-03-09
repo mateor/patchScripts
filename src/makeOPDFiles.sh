@@ -35,5 +35,4 @@ if [ ! -f $LOCK ]; then
      make clobber
 fi
 
-java -version
-#make framework services core telephony-common Mms
+make framework services core telephony-common Mms
