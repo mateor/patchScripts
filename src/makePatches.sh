@@ -23,10 +23,10 @@
 # THE SOFTWARE.
 
 # Adjust the below section to suit your environment
-AUTOPATCHER_DIR=~/android/auto-patcher
-PDROID_DIR=~/android/openpdroid                       # just your working, or "out", directory.
-PATCH_SCRIPTS_LOC=~/android/openpdroid/patchScripts
+[[ "$PDROID_DIR" == "" ]] && PDROID_DIR=~/android/openpdroid                       # just your working, or "out", directory.
+[[ "$PATCH_SCRIPTS_LOC" == "" ]] && PATCH_SCRIPTS_LOC=~/android/openpdroid/patchScripts
 LOCK=.pdroid-lock
+AUTOPATCHER_DIR=~/android/auto-patcher
 
 # If making auto-patcher patches for Android KitKat, you will need baksmali-2.0.jar. Now bundled.
 BAKSMALI_LOC="$PATCH_SCRIPTS_LOC/bin"

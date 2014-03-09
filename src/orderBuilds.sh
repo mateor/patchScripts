@@ -29,11 +29,13 @@ set -a
 # adjust these to your own environment/preferences
 
 # PDROID_DIR generally will be where you git clone patchScripts
-PDROID_DIR=~/android/openpdroid
-ANDROID_HOME=~/android/system/jellybean
-TARGET=mako
-MANUFACTURER=lge                    # not often needed, only AOKP right now.
-TARGET_VERSION=4.4
+[[ "$PDROID_DIR" == "" ]] && PDROID_DIR=~/android/openpdroid
+[[ "$ANDROID_HOME" == "" ]] && ANDROID_HOME=~/android/system/jellybean
+
+# defaults...change if you intend to run files on your device.
+[[ "$TARGET" == "" ]] && TARGET=mako
+[[ "$MANUFACTURER" == "" ]] && MANUFACTURER=lge                    # not often needed, only AOKP right now.
+[[ "$TARGET_VERSION" == "" ]] && TARGET_VERSION=4.4
 
 # adjust as per your machine- 8 might be a good start.
 JOBS=24
@@ -45,9 +47,9 @@ LUNCH_COMMAND="lunch ${1}_${TARGET}-userdebug"
 DEFAULT_LUNCH_COMMAND="lunch aosp_$TARGET-userdebug"
 
 
-# If you want the whole rom, change this to something else ("make otapackage" or "brunch $TARGET" maybe).
-BUILD_COMMAND=$PDROID_DIR/makeOPDFiles.sh
-
+# If you want the whole rom, comment this line and uncomment the next.
+[[ "$TARGET_VERSION" == "" ]] && BUILD_COMMAND=$PATCH_SCRIPTS_LOC/src/makeOPDFiles.sh
+#BUILD_COMMAND="make otapackage"
 
 JAR_OUT="$1"-"$TARGET_VERSION"
 
@@ -224,7 +226,7 @@ case "$1" in
           LUNCH_COMMAND="$DEFAULT_LUNCH_COMMAND"
      ;;
      *)
-     print_error "Not a valid rom target."
+     print_error "Not a valid rom target." && exit -1
      ;;
 esac
 
@@ -237,20 +239,22 @@ fi
 # order builds
 cd $ANDROID_HOME
 
-# get of legitimate as well as hacky manifests from old builds.
-rm -rf .repo/manifests manifests.xml
-rm -rf .repo/local_manifests local_manifests.xml
-$REPO_SYNC_COMMAND
-repo sync -j${JOBS} -f
-. build/envsetup.sh
-$LUNCH_COMMAND
-# for roomservice and local_manifest pickups
-$REPO_SYNC_COMMAND
-
+# if OpD patches are applied, don't repo sync.
+if [[ ! -f $LOCK ]]; then
+     # get of legitimate as well as hacky manifests from old builds.
+     rm -rf .repo/manifests manifests.xml
+     rm -rf .repo/local_manifests local_manifests.xml
+     $REPO_SYNC_COMMAND
+     repo sync -j${JOBS} -f
+     . build/envsetup.sh
+     $LUNCH_COMMAND
+     # for roomservice and local_manifest pickups
+     $REPO_SYNC_COMMAND
+else
+     . build/envsetup.sh
+     $LUNCH_COMMAND
+fi
 # I may have to just check that the above went without error manually. I could capture stderr...hmmmph.
 $BUILD_COMMAND
 
-# move to working directory
-#$PDROID_DIR/placeFiles.sh "$ROM_OUT"
 
-# OpD

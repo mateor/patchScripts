@@ -25,9 +25,11 @@
 # Apply PDroid from build system Root.
 
 # Change this section to whatever works for you
-ANDROID_HOME=~/android/system/jellybean
-PATCHES_LOCATION=~/android/OpenPDroidPatches
-PDROID_DIR=~/android/openpdroid
+# PDROID_DIR is for auto-patcher patches, you can ignore that if you aren't making those
+[[ "$ANDROID_HOME" == "" ]] && ANDROID_HOME=~/android/system/jellybean
+[[ "$PATCHES_LOCATION" == "" ]] && PATCHES_LOCATION=~/android/OpenPDroidPatches
+[[ "$PDROID_DIR" == "" ]] && PDROID_DIR=~/android/openpdroid
+
 
 # If you wish to patch earlier Android versions, pass the matching branch of the OpenPDroidPatches as param.
 BRANCH=4.4
@@ -79,14 +81,14 @@ fi
 
 if [ -f "$LOCK" ]; then
     echo ""
-    echo "Pdroid patches are already applied."
+    echo "OpenPDroid patches are already applied."
     echo "   removePdroid.sh should be ran to remove the lock at $LOCK"
     echo ""
     exit
 fi
 
 cd "$PATCHES_LOCATION"
-git checkout "$BRANCH" || patch_error "Could not checkout the branch you designated, double-check location and branch!"
+( git checkout "$BRANCH" || git checkout -t origin/"$BRANCH" ) || patch_error "Could not checkout the branch you designated, double-check location and branch!"
 
 # We now wipe old logs here
 echo "Patching with OpenPDroidPatches branch: $BRANCH" > "$LOG"

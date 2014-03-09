@@ -1,46 +1,68 @@
-## Patch management hacks
+## PatchScripts
+### A bash program to manage, build and apply OpenPDroid/Auto-Patcher patches.
 
-Collection of scripts I use to manage OpenPDroid source patches and create Autopatcher smali patches. Unless you are building a ROM with [OpenPdroid](https://github.com/OpenPDroid) or looking to experiment with the [auto-patcher](https://github.com/mateor/auto-patcher) there isn't much of interest here. 
+I changed this recently from a collection of scripts to a CLI app. You now invoke ```patchScripts``` and pass it commands. 
 
-These scripts _can_ be used to solely manage OpenPDroid patches. If you are simply looking for a simple way to handle source patches, ```applyPdroid.sh``` and ```removePdroid.sh``` might be useful to you.
 
-The scripts assume some file system locations. You can use the defaults or edit in your own. I intend to move these to a config but for now you should look at the first few lines of each script and edit accordingly.
+I used this to manage OpenPDroid source patches and create Autopatcher smali patches. Unless you are building a ROM with [OpenPdroid](https://github.com/OpenPDroid) or looking to experiment with the [auto-patcher](https://github.com/mateor/auto-patcher) there isn't much of interest here. 
+
+This app _can_ be used to solely manage OpenPDroid patches. If you are simply looking for a simple way to handle source patches, ```./patchScripts apply``` and ```./patchScripts remove``` might be useful to you.
+
+####You WILL want to edit the enviromental variables in ```patchScripts```!
 
      ANDROID_HOME       # this is the root of your Android source tree
      PATCHES_LOCATION   # wherever you git clone https://github.com/OpenPDroid/OpenPDroidPatches
      PDROID_DIR         # working location to put created jars and create autopatcher patches
-     BAKSMALI_LOC       # location of the smali/baksmali binaries if not in your path*
 
-* if creating patches for Android4.4 KitKat, you will need [baksmali-2.0 or greater](https://github.com/JesusFreke/smali).
+### Usage
+Here is the command line help, I have been sitting on this for several months, and wanted to push it up before I shuttered the auto-patcher/OpenPDroid doors for good. Thanks everyone for all the support!
 
-and for the commands below...
+    DESCRIPTION:
+    
+    Small shell app by @mateor. Apply OpenPDroid patches or create auto_patcher patches.
+     !! You will want to set some environmental variables at the top of patchScripts.sh !!
 
-     ROMTYPE            # subjective name. If you build CyanogenMod then 'cm' would be fine
-     BRANCH             # Match branch of OpenPDroidPatches. Defaults to 4.4 currently
-     OUTPUT_DIR         # This will print to screen, equal to $PDROID_DIR/$ROMTYPE/date
+    OPTIONS:
+       apply <BRANCH>
+            applies the entire OpD <BRANCH> patch set to source of ANDROID_HOME
+       remove
+            removes OpD patches from ANDROID_HOME and (IMPORTANT) resets to last commit
+       makeFiles ( <ROMTYPE> || <TARGET_VESION> )
+               : creates only the OpD-related binaries for ROMTYPE
+                 valid ROMTYPES are ( aosp, cm, aokp, omni, pac, pa, vanir, slim)
+                 valid TARGET_VERSION depends on ROMTYPE, but is the Android version:
+                               (2.3, 4.0, 4.1. 4.2. 4.3. 4.4 )
+                 This command will pull sources and lunch for you, if all is working!
+    
+       makePatches
+               : makes smali patches for auto-patcher.
 
-### Apply source tree patches and create smali patches
-_Creates a patched/unpatched set of OpenPDroid jars, which we decompile and diff to create smali patches, which are then applied with the auto-patcher_
+### Apply/remove source tree patches
+An easy way to apply/remove OpenPDroidPatches.
 
-1) First, make stock files from unpatched source and move those files to a working directory, like so:
+1) Edit the values at the top of ```patchScripts``` and then  
+2) ```patchScripts apply``` or ```patchScripts apply <TARGET_VERSION>```
 
-     repo sync; build/envsetup.sh; lunch    # target rom
-     ./makeOPDFiles.sh                      # orders make of target jars only
-     ./placeFiles.sh $ROMTYPE               # Stock jars for making autopatcher patches
+Removal of patches once your build is done is easy, ```patchScripts remove```.
+  
 
-2) Then apply the OpenPDroidPatches to __the exact same source__ (do NOT repo sync here!) and rebuild:
+### Build files
 
-     ./applyPdroid.sh $BRANCH               # Accepts a OpenPDroidPatches branch. Defaults to 4.3
-     ./makeOPDFiles.sh
-     ./placeFiles.sh $ROMTYPE
+You can also just create the OpenPDroid related binaries, either to flash to your device or to make auto-patcher patches with. 
 
-3) Finally, change to the working directory and ordering patches (Below, I elect to reset my source tree with ```removePdroid.sh``` first)
+Invoking ```patchScripts makeFiles <ROMTYPE> <TARGET_VERSION>``` will:
 
-     ./removePdroid.sh                     # optional here, but you'll want it eventually
-     cd $OUTPUT_DIR                        # you still have to read output dir from screen
-     ./makePatches.sh
+   * repo init and pull source code of rom
+   * lunch for your device (edit values in ```patchScripts```)
+   * create binaries ( you can create entire rom, uncomment line in ```patchScripts```)
+
+I half-ass added support to just pass a github default.xml repo as an arg, but final implementation is left as an exercise to the reader (weak, I know.) It works, but only if you specify the proper TARGET_VERSION in patchScripts.
+
+### Make Smali patches
+
+You must build a set of OpD binaries once "stock", and once with OpD patches applied. Then order ```patchScripts makePatches``` and it will go to your out directory and create smali patches for you.
 
 
-### Auto-patcher
+The final steps of creating actual auto-patcher patches requires further processing of the patches. I refer you to [the processing scripts in the auto_patcher](https://github.com/mateor/auto-patcher/tree/master/ap_scripts), but in the most general sense, you split the patches with ``split_opd.sh`` after they are placed in the autopatcher.
 
-Creating actual auto-patcher patches requires further processing of the patches. I refer you to [the processing scripts in the auto_patcher](https://github.com/mateor/auto-patcher/tree/master/ap_scripts), but in the most general sense, you split the patches with ``split_opd.sh`` after they are placed in the autopatcher.
+**Everything for the auto-patcher and patchScripts is freely available under the MIT License. See the included license for details.**

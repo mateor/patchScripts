@@ -37,4 +37,4 @@ if [ ! -f $LOCK ]; then
      make clobber
 fi
 
-make framework services core telephony-common Mms
+make framework services core telephony-common Mms && exit $? #|| ( echo "You need to lunch your target at your ANDROID_HOME!" && return -1)

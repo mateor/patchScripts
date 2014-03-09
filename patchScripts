@@ -1,0 +1,127 @@
+#!/bin/bash
+
+# The MIT License (MIT)
+#
+# Copyright (c) 2013 Mateor
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+
+# Apply/Remove OpenPDroidPatches
+#    make auto-patcher patches as well.
+
+# CHANGE THIS SECTION!!
+
+# This is my personal set up. I include it as an example, but it would be pretty easy to
+#  end up clong the entire AOSP in a new directory, if you aren't aware.
+
+
+# ************  Start Editing Enviroment Here *****************
+
+# PDROID_DIR is for auto-patcher patches, you can ignore that if you aren't making those
+ANDROID_HOME=~/android/system/jellybean
+PATCHES_LOCATION=/home/mateor/android/testerg/OpenPDroidPatches
+PATCH_SCRIPTS_LOC=$(pwd)
+PDROID_DIR=~/android/openpdroid
+
+# This just builds the OpD framework. If you want the whole rom, comment this line and uncomment the next.
+BUILD_COMMAND=$PATCH_SCRIPTS_LOC/src/makeOPDFiles.sh
+#BUILD_COMMAND="make otapackage"
+
+# TARGET and MANUFACTURER should match your device tree
+TARGET_VERSION=4.4
+TARGET=mako
+MANUFACTURER=lge
+
+# ************  End Editing Enviroment   **********************
+
+LOCK="$PDROID_DIR"/.pdroid-lock
+
+bold=`tput bold`
+normal=`tput sgr0`
+
+exit_code=0
+
+# pass environmental variables to children
+set -a
+source .config
+
+usage () {
+     echo ""
+     echo "DESCRIPTION:"
+     echo ""
+     echo "Small shell app by @mateor. Apply OpenPDroid patches or create auto_patcher patches."
+     echo "  !! You will want to set some environmental variables at the top of patchScripts.sh !!"
+     echo ""
+     echo "OPTIONS:"
+     echo "    ${bold}apply <BRANCH>${normal}"
+     echo "           applies the entire OpD <BRANCH> patch set to source of ANDROID_HOME"
+     echo "    ${bold}remove${normal}"
+     echo "           removes OpD patches from ANDROID_HOME and (IMPORTANT) resets to last commit"
+     echo "    ${bold}makeFiles ( <ROMTYPE> || <TARGET_VESION>${normal} )" 
+     echo "           : creates only the OpD-related binaries for ROMTYPE"
+     echo "             valid ${bold}ROMTYPES${normal} are ( aosp, cm, aokp, omni, pac, pa, vanir, slim)"
+     echo "             valid ${bold}TARGET_VERSION${normal} depends on ROMTYPE, but is the Android version:
+                              (2.3, 4.0, 4.1. 4.2. 4.3. 4.4 )"
+     echo "              This command will pull sources and lunch for you, if all is working!"
+     echo ""
+     echo "    ${bold}makePatches${normal}"
+     echo "             : makes smali patches for auto-patcher."
+     echo ""
+     echo " EXAMPLE: ./patchScripts makeFiles aosp 4.4"
+     echo ""
+     exit $exit_code
+}
+
+if [[ "$#" == 0 ]]; then
+     usage
+fi
+
+# check for lifelines
+for arg in $@; do
+     #TODO @mateor Add a help for each command
+     if ( [[ $arg == "h" ]] || [[ $arg == "-h" ]] || [[ $arg == "--h" ]] || [[ $arg == "help" ]] || [[ $arg == "-help" ]] || [[ $arg == "--help" ]] ); then
+          usage
+     fi
+done
+
+case "$1" in
+[Aa]pply)
+     if [[ "$#" -gt 1 ]]; then
+          TARGET_VERSION="$2"
+     fi
+     source src/applyPdroid.sh "$TARGET_VERSION"
+     ;;
+[Rr]emove)
+     source src/removePdroid.sh
+     ;;
+[Mm]akeFiles)
+     source src/orderBuilds.sh "$2" "$3" && (source src/makeOPDFiles.sh && source placeFiles.sh "$2")
+     ;;
+[Mm]akePatches)
+     OUT=$(cat .config)
+     cd $OUT
+     source $PATCH_SCRIPTS_LOC/src/makePatches.sh
+     echo "Created patches at $OUT"
+     ;;
+*)
+     echo ""
+     echo "!!! Command not recognized !!!"
+     exit_code=-1 && usage
+     ;;
+esac
