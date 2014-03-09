@@ -91,7 +91,12 @@ case "$1" in
      source $PATCH_SCRIPTS_LOC/src/removePdroid.sh
      ;;
 [Mm]akeFiles)
-     source $PATCH_SCRIPTS_LOC/src/orderBuilds.sh "$2" "$3" && (source $PATCH_SCRIPTS_LOC/src/makeOPDFiles.sh && source $PATCH_SCRIPTS_LOC/src/placeFiles.sh "$2")
+     # I would at one point like to manage the exit code to make these conditional
+     #    but it will require some investigation into the standard return values from make.
+     
+     # orderBuilds calls makeOPDFiles.sh. If you desire the whole rom, change BUILD_COMMAND in the BUILD file
+     source $PATCH_SCRIPTS_LOC/src/orderBuilds.sh "$2" "$3" && \
+               source $PATCH_SCRIPTS_LOC/src/placeFiles.sh "$2"
      ;;
 [Mm]akePatches)
      OUT=$(cat $IPC)

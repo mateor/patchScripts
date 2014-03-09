@@ -47,7 +47,7 @@ LUNCH_COMMAND="lunch ${1}_${TARGET}-userdebug"
 DEFAULT_LUNCH_COMMAND="lunch aosp_$TARGET-userdebug"
 
 # If you want the whole rom, comment this line and uncomment the next.
-BUILD_COMMAND=$PATCH_SCRIPTS_LOC/src/makeOPDFiles.sh
+[[ "$BUILD_COMMAND" == "" ]] && BUILD_COMMAND=$PATCH_SCRIPTS_LOC/src/makeOPDFiles.sh
 #BUILD_COMMAND="make otapackage"
 
 print_error() {
@@ -236,27 +236,28 @@ fi
 # order builds
 cd $ANDROID_HOME
 
-# if OpD patches are applied, don't repo sync.
-if [[ ! -f $LOCK ]]; then
-     # get of legitimate as well as hacky manifests from old builds.
-     current=$(cat $IPC)
-     current_rom=${current%-*}
-     # remove old manifests and repo init if switching rom types
-     if [[ "$1" != current  ]]; then
-          rm -rf .repo/manifests manifests.xml
-          rm -rf .repo/local_manifests local_manifests.xml
-          $REPO_INIT_COMMAND
-          repo sync -j${JOBS} -f
-     fi
-     . build/envsetup.sh
-     $LUNCH_COMMAND
-     # for roomservice and local_manifest pickups
-     $REPO_INIT_COMMAND
-else
-     . build/envsetup.sh
-     $LUNCH_COMMAND
-fi
+echo $LUNCH_COMMAND
+## if OpD patches are applied, don't repo sync.
+#if [[ ! -f $LOCK ]]; then
+#     # get of legitimate as well as hacky manifests from old builds.
+#     current=$(cat $IPC)
+#     current_rom=${current%-*}
+#     # remove old manifests and repo init if switching rom types
+#     if [[ "$1" != current  ]]; then
+#          rm -rf .repo/manifests manifests.xml
+#          rm -rf .repo/local_manifests local_manifests.xml
+#          $REPO_INIT_COMMAND
+#          repo sync -j${JOBS} -f
+#     fi
+#     . build/envsetup.sh
+#     $LUNCH_COMMAND
+#     # for roomservice and local_manifest pickups
+#     $REPO_INIT_COMMAND
+#else
+#     . build/envsetup.sh
+#     $LUNCH_COMMAND
+#fi
 # I may have to just check that the above went without error manually. I could capture stderr...hmmmph.
-$BUILD_COMMAND
+#$BUILD_COMMAND
 
 

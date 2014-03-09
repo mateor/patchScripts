@@ -30,6 +30,8 @@
 #  end up clong the entire AOSP in a new directory, if you aren't aware.
 
 
+PATCH_SCRIPTS_LOC=$(pwd)
+
 # ************  Start Editing Enviroment Here *****************
 
 ANDROID_HOME=~/android/system/jellybean
@@ -51,7 +53,7 @@ MANUFACTURER=lge
 
 # ************  End Editing Enviroment   **********************
 
-PATCH_SCRIPTS_LOC=$(pwd)
+
 
 LOCK="$PDROID_DIR"/.pdroid-lock
 IPC=$PATCH_SCRIPTS_LOC/.iproc
