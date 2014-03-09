@@ -2,7 +2,7 @@
 
 # The MIT License (MIT)
 #
-# Copyright (c) 2013, 2014 Mateor
+# Copyright (c) 2014 Mateor
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -22,18 +22,41 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-# order OpD build
+# Config for patchScripts 
 
-# Edit this section to match your file system
-[[ "$PDROID_DIR" == "" ]] && PDROID_DIR=~/android/openpdroid
+# CHANGE THIS SECTION!!
 
-# Pdroid lock means that the PDroid-patches are applied
-[[ "$LOCK" == "" ]] && LOCK=$PDROID_DIR/.pdroid-lock
+# This is my personal set up. I include it as an example, but it would be pretty easy to
+#  end up clong the entire AOSP in a new directory, if you aren't aware.
 
-# the absence of the PDroid lock means you are ordering a stock build...that usually needs to be clean
-if [ ! -f $LOCK ]; then
-     make clobber
-fi
 
-java -version
-#make framework services core telephony-common Mms
+# ************  Start Editing Enviroment Here *****************
+
+ANDROID_HOME=~/android/system/jellybean
+PATCHES_LOCATION=~/android/OpenPDroidPatches
+
+# These are for auto-patcher patch creation, you can ignore it if you aren't making those
+PDROID_DIR=~/android/openpdroid
+AUTOPATCHER_DIR=~/android/auto-patcher
+
+# By default, patchScripts only builds the OpD framework!
+# If you want to build an entire rom, comment this line and uncomment the next.
+BUILD_COMMAND=$PATCH_SCRIPTS_LOC/src/makeOPDFiles.sh
+#BUILD_COMMAND="make otapackage"
+
+# TARGET and MANUFACTURER should match your device tree
+TARGET_VERSION=4.4
+TARGET=mako
+MANUFACTURER=lge
+
+# ************  End Editing Enviroment   **********************
+
+PATCH_SCRIPTS_LOC=$(pwd)
+
+LOCK="$PDROID_DIR"/.pdroid-lock
+IPC=.iproc
+
+bold=`tput bold`
+normal=`tput sgr0`
+
+exit_code=0

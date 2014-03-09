@@ -8,7 +8,9 @@ I used this to manage OpenPDroid source patches and create Autopatcher smali pat
 
 This app _can_ be used to solely manage OpenPDroid patches. If you are simply looking for a simple way to handle source patches, ```./patchScripts apply``` and ```./patchScripts remove``` might be useful to you.
 
-####You WILL want to edit the enviromental variables in ```patchScripts```!
+####You WILL want to edit the enviromental variables in ```BUILD```!
+
+The ```BUILD``` file sets the environment and lets you choose your target device and Android version. Use it or WOE BETIDE YOU!
 
      ANDROID_HOME       # this is the root of your Android source tree
      PATCHES_LOCATION   # wherever you git clone https://github.com/OpenPDroid/OpenPDroidPatches
@@ -20,7 +22,7 @@ Here is the command line help, I have been sitting on this for several months, a
     DESCRIPTION:
     
     Small shell app by @mateor. Apply OpenPDroid patches or create auto_patcher patches.
-     !! You will want to set some environmental variables at the top of patchScripts.sh !!
+     !! You will want to set some environmental variables at the top of BUILD file !!
 
     OPTIONS:
        apply <BRANCH>

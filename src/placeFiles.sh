@@ -2,7 +2,7 @@
 
 # The MIT License (MIT)
 #
-# Copyright (c) 2013 Mateor
+# Copyright (c) 2013, 2014 Mateor
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -122,4 +122,4 @@ else
      echo "ERROR! Was not able to place ( ${FAILED_JARS[@]} ) in $JAR_OUT"
 fi
 echo ""
-echo $JAR_OUT > $PATCH_SCRIPTS_LOC/.config
+echo $JAR_OUT > $PATCH_SCRIPTS_LOC/$IPC
