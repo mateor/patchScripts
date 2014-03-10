@@ -22,8 +22,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-# Adjust the below section to suit your environment
-[[ "$PDROID_DIR" == "" ]] && PDROID_DIR=~/android/openpdroid                       # just your working, or "out", directory.
+# These environmental variables are best set in the BUILD file!
+[[ "$PDROID_DIR" == "" ]] && PDROID_DIR=~/android/openpdroid
 [[ "$PATCH_SCRIPTS_LOC" == "" ]] && PATCH_SCRIPTS_LOC=~/android/openpdroid/patchScripts
 [[ "$LOCK" == "" ]] && LOCK=$PDROID_DIR/.pdroid-lock
 [[ $AUTOPATCHER_DIR == "" ]] && AUTOPATCHER_DIR=~/android/auto-patcher
@@ -46,9 +46,10 @@ fi
 # 4.1* is API=16
 # 4.2* is API=17
 # 4.3* is API=18
+# 4.4 is API=19
 
-if [[ $# -gt 0 ]]; then
-    API=$1
+if [[ $# -gt 1 ]]; then
+    API=$2
     echo ""
     echo "### Using API $API ###"
 fi
@@ -56,8 +57,8 @@ fi
 if [ -z "$API" ]; then
      API=19
      echo ""
-     echo "Defaulting to API 19. You can pass an API as the sole argument to the script"
-     echo "See in-script comment for further information"
+     echo "Defaulting to API 19. This should automatically be properly set, but you may"
+     echo "    pass an API as an argunment (i.e. ./patchScripts makePatches 19)"
      echo ""
 fi
 

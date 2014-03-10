@@ -35,6 +35,5 @@ if [ ! -f $LOCK ]; then
      make clobber
 fi
 
-echo $PATCH_SCRIPTS_LOC/DEBUG.log
-java -version 2>&1 > $PATCH_SCRIPTS_LOC/DEBUG.log
 make framework services core telephony-common Mms
+java -version

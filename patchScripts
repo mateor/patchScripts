@@ -32,10 +32,6 @@
 set -a
 source BUILD
 
-#debug
-source .iproc
-
-
 usage () {
      echo ""
      echo "DESCRIPTION:"
@@ -102,7 +98,6 @@ case "$1" in
      OUT=$(cat $IPC)
      cd $OUT
      source $PATCH_SCRIPTS_LOC/src/makePatches.sh
-     echo "Created patches at $OUT"
      ;;
 *)
      echo ""

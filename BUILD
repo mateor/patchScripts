@@ -50,7 +50,8 @@ BUILD_COMMAND=$PATCH_SCRIPTS_LOC/src/makeOPDFiles.sh
 TARGET_VERSION=4.4
 TARGET=mako
 MANUFACTURER=lge
-
+# this is how many threads to sync and build. If you have old computer or bad internet set to 8 or even 4.
+JOBS=24
 # ************  End Editing Enviroment   **********************
 
 
