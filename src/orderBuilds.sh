@@ -234,12 +234,6 @@ else
      REPO_INIT_COMMAND="repo init -u https://github.com/${GITHUB} -b $TARGET_BRANCH"
 fi
 
-# deal with CM's totally irritating way of incorporating Android Terminal
-if [[ "$2" == "cm" ]]; then
-     cd "$ANDROID_HOME"/vendor/cm
-     ./get-prebuilts
-fi
-
 # order builds
 cd $ANDROID_HOME
 
@@ -263,6 +257,14 @@ else
      . build/envsetup.sh
      $LUNCH_COMMAND
 fi
+
+# deal with CM's totally irritating way of incorporating Android Terminal
+if [[ "$2" == "cm" ]]; then
+     cd "$ANDROID_HOME"/vendor/cm
+     ./get-prebuilts
+fi
+
+
  I may have to just check that the above went without error manually. I could capture stderr...hmmmph.
 $BUILD_COMMAND
 
