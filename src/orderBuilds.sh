@@ -228,10 +228,16 @@ case "$1" in
      ;;
 esac
 
-if [[ "$1" == aokp ]]; then
+if [[ "$2" == aokp ]]; then
      REPO_INIT_COMMAND="repo init -u https://github.com/$GITHUB -b $TARGET_BRANCH -g all,-notdefault,$TARGET,$MANUFACTURER"
 else
      REPO_INIT_COMMAND="repo init -u https://github.com/${GITHUB} -b $TARGET_BRANCH"
+fi
+
+# deal with CM's totally irritating way of incorporating Android Terminal
+if [[ "$2" == "cm" ]]; then
+     cd "$ANDROID_HOME"/vendor/cm
+     ./get-prebuilts
 fi
 
 # order builds
