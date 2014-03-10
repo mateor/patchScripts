@@ -6,8 +6,6 @@ I changed this recently from a collection of scripts to a CLI app. You now invok
 
 I used this to manage OpenPDroid source patches and create Autopatcher smali patches. Unless you are building a ROM with [OpenPdroid](https://github.com/OpenPDroid) or looking to experiment with the [auto-patcher](https://github.com/mateor/auto-patcher) there isn't much of interest here. 
 
-This app _can_ be used to solely manage OpenPDroid patches. If you are simply looking for a simple way to handle source patches, ```./patchScripts apply``` and ```./patchScripts remove``` might be useful to you.
-
 ####You WILL want to edit the enviromental variables in ```BUILD```!
 
 The ```BUILD``` file sets the environment and lets you choose your target device and Android version. Use it or WOE BETIDE YOU!
@@ -36,34 +34,39 @@ Here is the command line help, I have been sitting on this for several months, a
                                (2.3, 4.0, 4.1. 4.2. 4.3. 4.4 )
                  This command will pull sources and lunch for you, if all is working!
     
-       makePatches
+       makePatches ( <API> )
                : makes smali patches for auto-patcher.
+                  <API> is totally optional and not necessary as it is handled
+                        by the program pretty well.
+                   Valid <API> are (10, 15, 16, 17, 18, 19)
 
-### Apply/remove source tree patches
-An easy way to apply/remove OpenPDroidPatches.
-
-1) Edit the values at the top of ```patchScripts``` and then  
-2) ```patchScripts apply``` or ```patchScripts apply <TARGET_VERSION>```
-
-Removal of patches once your build is done is easy, ```patchScripts remove```.
-  
 
 ### Build files
 
-You can also just create the OpenPDroid related binaries, either to flash to your device or to make auto-patcher patches with. 
+You can create just the OpenPDroid related binaries or you can pull source code and nuild an entire ROM. See comments in BUILD file.
 
 Invoking ```patchScripts makeFiles <ROMTYPE> <TARGET_VERSION>``` will:
 
-   * repo init and pull source code of rom
+   * repo init and pull source code of ROMTYPE rom
    * lunch for your device (edit values in ```patchScripts```)
-   * create binaries ( you can create entire rom, uncomment line in ```patchScripts```)
+   * create binaries or full rom.
 
-I half-ass added support to just pass a github default.xml repo as an arg, but final implementation is left as an exercise to the reader (weak, I know.) It works, but only if you specify the proper TARGET_VERSION in patchScripts.
+I half-ass added support to just pass a github default.xml repo as an arg, but final implementation is left as an exercise to the reader (weak, I know.) It works, but only if you specify the proper TARGET_VERSION in BUILD.
 
 ### Make Smali patches
 
-You must build a set of OpD binaries once "stock", and once with OpD patches applied. Then order ```patchScripts makePatches``` and it will go to your out directory and create smali patches for you.
+You must build two sets of OpD-related binaries. One "stock" (or "unpatched") and one with OpD patches applied. Example:
 
+    1) ./patchScripts makeFiles cm 4.4
+    2) ./patchScripts apply
+    3) ./patchScripts makeFiles cm 4.4
+    4) ./patchScripts makePatches
+    
+If you want to reset your source tree:
+
+    5) ./patchScripts remove
+
+The smali patches will be in ```$PDROID_DIR/cm/$DATE```.
 
 The final steps of creating actual auto-patcher patches requires further processing of the patches. I refer you to [the processing scripts in the auto_patcher](https://github.com/mateor/auto-patcher/tree/master/ap_scripts), but in the most general sense, you split the patches with ``split_opd.sh`` after they are placed in the autopatcher.
 

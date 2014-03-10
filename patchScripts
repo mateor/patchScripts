@@ -28,9 +28,10 @@
 
 # PLEASE edit values in BUILD file or WOE BETIDE YOU!
 
-# pass environmental variables to children
-set -a
+# populate environmental variables and pass to children
 source BUILD
+set -a
+
 
 usage () {
      echo ""
@@ -56,9 +57,10 @@ usage () {
                               (2.3, 4.0, 4.1. 4.2. 4.3. 4.4 )"
      echo "             This command should pull sources, lunch, and build binaries"
      echo ""
-     echo "    ${bold}makePatches${normal}"
+     echo "    ${bold}makePatches${normal} ( ${bold}<API>${normal} )"
      echo "           : makes smali patches for auto-patcher."
-     echo ""
+     echo "             <API> is totally optional, and is basically unnecessary."
+     echo "             valid <API> are (10, 15, 16, 17, 18, 19). Ignore this though."
      echo " EXAMPLE: ./patchScripts makeFiles aosp 4.4"
      echo ""
      exit $exit_code
